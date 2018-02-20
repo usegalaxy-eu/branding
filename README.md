@@ -18,9 +18,9 @@ Light Background                           | Dark Background
 
 ## Freiburg Galaxy
 
-- Use this anywhere we're really talking about the european galaxy project as a collective.
-- Do not use this when referring to specific sub-teams fo the Galaxy Project Europe.
-- E.g. posters next to your ELIXIR/deNBI logos
+- Use this anywhere we're really talking about the Freiburg Galaxy Team
+- Do not use this when referring to the collective team would be better
+- E.g. any articles/trainings produced by Freiburg Galaxy Team
 
 Light Background                                       | Dark Background
 ----------------------------------------               | ----
