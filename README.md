@@ -16,6 +16,22 @@ Light Background                           | Dark Background
 [PNG 128px](galaxy-eu/galaxy-eu.128.png)   | [PNG 128px](galaxy-eu.inv/galaxy-eu.inv.128.png)
 [SVG](./galaxy-eu.svg)                     | [SVG](galaxy-eu.inv.svg)
 
+## Freiburg Galaxy
+
+- Use this anywhere we're really talking about the european galaxy project as a collective.
+- Do not use this when referring to specific sub-teams fo the Galaxy Project Europe.
+- E.g. posters next to your ELIXIR/deNBI logos
+
+Light Background                                       | Dark Background
+----------------------------------------               | ----
+![](./freiburg-galaxy/freiburg-galaxy.256.png)         | ![](./freiburg-galaxy.inv/freiburg-galaxy.inv.256.png)
+[PNG (Large)](freiburg-galaxy/freiburg-galaxy.png)     | [PNG (Large)](freiburg-galaxy.inv/freiburg-galaxy.inv.png)
+[PNG 1024px](freiburg-galaxy/freiburg-galaxy.1024.png) | [PNG 1024px](freiburg-galaxy.inv/freiburg-galaxy.inv.1024.png)
+[PNG 512px](freiburg-galaxy/freiburg-galaxy.512.png)   | [PNG 512px](freiburg-galaxy.inv/freiburg-galaxy.inv.512.png)
+[PNG 256px](freiburg-galaxy/freiburg-galaxy.256.png)   | [PNG 256px](freiburg-galaxy.inv/freiburg-galaxy.inv.256.png)
+[PNG 128px](freiburg-galaxy/freiburg-galaxy.128.png)   | [PNG 128px](freiburg-galaxy.inv/freiburg-galaxy.inv.128.png)
+[SVG](./freiburg-galaxy.svg)                           | [SVG](freiburg-galaxy.inv.svg)
+
 ## useGalaxy.eu
 
 - Use this anywhere where you want to direct users to our server, e.g.
