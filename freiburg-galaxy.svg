@@ -10,9 +10,9 @@
    xmlns:xlink="http://www.w3.org/1999/xlink"
    xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
    xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
-   width="210mm"
-   height="297mm"
-   viewBox="0 0 744.09448819 1052.3622047"
+   width="403.10358mm"
+   height="260.65674mm"
+   viewBox="0 0 1428.3198 923.58686"
    id="svg2"
    version="1.1"
    inkscape:version="0.91 r13725"
@@ -403,16 +403,20 @@
      inkscape:pageopacity="0.0"
      inkscape:pageshadow="2"
      inkscape:zoom="0.061871843"
-     inkscape:cx="1395.1474"
-     inkscape:cy="384.28837"
+     inkscape:cx="957.72337"
+     inkscape:cy="868.29284"
      inkscape:document-units="px"
      inkscape:current-layer="layer1"
      showgrid="false"
-     inkscape:window-width="1756"
-     inkscape:window-height="1128"
-     inkscape:window-x="1447"
-     inkscape:window-y="32"
-     inkscape:window-maximized="0" />
+     inkscape:window-width="1920"
+     inkscape:window-height="1080"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     fit-margin-top="10"
+     fit-margin-left="10"
+     fit-margin-right="10"
+     fit-margin-bottom="10" />
   <metadata
      id="metadata7">
     <rdf:RDF>
@@ -421,25 +425,26 @@
         <dc:format>image/svg+xml</dc:format>
         <dc:type
            rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
-        <dc:title />
+        <dc:title></dc:title>
       </cc:Work>
     </rdf:RDF>
   </metadata>
   <g
      inkscape:label="Layer 1"
      inkscape:groupmode="layer"
-     id="layer1">
+     id="layer1"
+     transform="translate(-437.42403,-612.77976)">
     <flowRoot
        xml:space="preserve"
        id="flowRoot3336"
-       style="fill:black;stroke:none;stroke-opacity:1;stroke-width:1px;stroke-linejoin:miter;stroke-linecap:butt;fill-opacity:1;font-family:Exo;font-style:normal;font-weight:200;font-size:40px;line-height:125%;letter-spacing:0px;word-spacing:0px;-inkscape-font-specification:'Exo Ultra-Light';font-stretch:normal;font-variant:normal;"><flowRegion
+       style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-size:40px;line-height:125%;font-family:Exo;-inkscape-font-specification:'Exo Ultra-Light';letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none;stroke-width:1px;stroke-linecap:butt;stroke-linejoin:miter;stroke-opacity:1"><flowRegion
          id="flowRegion3338"><rect
            id="rect3340"
            width="1971.4286"
            height="2302.8572"
            x="-1805.7142"
            y="-339.06638"
-           style="-inkscape-font-specification:'Exo Ultra-Light';font-family:Exo;font-weight:200;font-style:normal;font-stretch:normal;font-variant:normal;" /></flowRegion><flowPara
+           style="font-style:normal;font-variant:normal;font-weight:200;font-stretch:normal;font-family:Exo;-inkscape-font-specification:'Exo Ultra-Light'" /></flowRegion><flowPara
          id="flowPara3342" /></flowRoot>    <g
        id="g4278"
        inkscape:export-xdpi="90"
