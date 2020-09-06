@@ -7,7 +7,7 @@
 
 ## Galaxy Europe
 
-- Use this anywhere we're really talking about the European Galaxy project as a collective, e.g. posters next to your ELIXIR/de.NBI logos.
+- Use this anywhere you refer to the European Galaxy project/community.
 - Do not use this when referring to specific sub-teams of the Galaxy Project Europe.
 
 Light Background                           | Dark Background
