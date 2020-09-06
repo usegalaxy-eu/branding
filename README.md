@@ -37,7 +37,7 @@ Light Background                                       | Dark Background
 
 ## useGalaxy.eu
 
-- Use this anywhere where you want to direct users to our server, e.g. trainings where you want to remind users "here is the URL" and stickers you
+- Use this anywhere where you want to direct users to the European Galaxy server, e.g. trainings where you want to remind users "here is the URL" and stickers you
   place which should be able to point users to our server with no further text.
 
 Light Background                                 | Dark Background
