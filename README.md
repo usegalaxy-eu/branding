@@ -1,8 +1,13 @@
 # European Galaxy Branding Resources
 
+## Galaxy Europe factsheet
+
+![factsheet](factsheet/factsheet.png)
+ 
+
 ## Galaxy Europe
 
-- Use this anywhere we're really talking about the european galaxy project as a collective.
+- Use this anywhere we're really talking about the European Galaxy project as a collective.
 - Do not use this when referring to specific sub-teams fo the Galaxy Project Europe.
 - E.g. posters next to your ELIXIR/deNBI logos
 
