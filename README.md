@@ -22,7 +22,7 @@ Light Background                           | Dark Background
 
 ## Freiburg Galaxy
 
-- Use this anywhere we're really talking about the Freiburg Galaxy Team, e.g. any articles/trainings produced by Freiburg Galaxy Team.
+- Use this anywhere you refer to the Freiburg Galaxy Team, e.g. any articles/training activities produced by the Freiburg Galaxy Team.
 - Do not use this when referring to the collective team.
 
 Light Background                                       | Dark Background
