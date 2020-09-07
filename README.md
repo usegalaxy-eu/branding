@@ -1,10 +1,14 @@
 # European Galaxy Branding Resources
 
+## Galaxy Europe factsheet
+
+![factsheet](factsheet/factsheet.png)
+ 
+
 ## Galaxy Europe
 
-- Use this anywhere we're really talking about the european galaxy project as a collective.
-- Do not use this when referring to specific sub-teams fo the Galaxy Project Europe.
-- E.g. posters next to your ELIXIR/deNBI logos
+- Use this anywhere you refer to the European Galaxy project/community.
+- Do not use this when referring to specific sub-teams of the Galaxy Project Europe.
 
 Light Background                           | Dark Background
 ----------------------------------------   | ----
@@ -18,9 +22,8 @@ Light Background                           | Dark Background
 
 ## Freiburg Galaxy
 
-- Use this anywhere we're really talking about the Freiburg Galaxy Team
-- Do not use this when referring to the collective team would be better
-- E.g. any articles/trainings produced by Freiburg Galaxy Team
+- Use this anywhere you refer to the Freiburg Galaxy Team, e.g. any articles/training activities produced by the Freiburg Galaxy Team.
+- Do not use this when referring to a broader community.
 
 Light Background                                       | Dark Background
 ----------------------------------------               | ----
@@ -34,10 +37,8 @@ Light Background                                       | Dark Background
 
 ## useGalaxy.eu
 
-- Use this anywhere where you want to direct users to our server, e.g.
-  trainings where you want to remind users "here is the URL" and stickers you
-  place which should be able to point users to our server with no further
-  text.
+- Use this anywhere where you want to direct users to the European Galaxy server, e.g. trainings where you want to remind users "here is the URL" and stickers you
+  place which should be able to point users to our server with no further text.
 
 Light Background                                 | Dark Background
 ----------------------------------------         | ----
@@ -51,8 +52,7 @@ Light Background                                 | Dark Background
 
 ## Logo
 
-- Anywhere a logo is needed in our colours, without any text.
-- E.g. favicons / etc.
+- Anywhere a logo is needed in our colours, without any text, e.g. favicons/etc.
 
 Light Background                                     | Dark Background
 ----------------------------------------             | ----
