@@ -2,7 +2,7 @@
 
 ## Galaxy Europe factsheet
 
-![factsheet](factsheet/factsheet2.png)
+![factsheet](factsheet/factsheet.png)
  
 
 ## Galaxy Europe
