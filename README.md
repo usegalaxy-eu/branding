@@ -2,6 +2,8 @@
 
 ## Galaxy Europe factsheet
 
+![factsheet](factsheet/factsheet_automatable_eu.png)
+------
 ![factsheet](factsheet/factsheet.png)
  
 
