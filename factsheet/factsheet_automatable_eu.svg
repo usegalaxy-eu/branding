@@ -741,11 +741,11 @@
      inkscape:zoom="0.1662476"
      inkscape:cx="2123.3389"
      inkscape:cy="1341.3727"
-     inkscape:window-x="15"
-     inkscape:window-y="69"
+     inkscape:window-x="217"
+     inkscape:window-y="43"
      inkscape:window-maximized="0"
      inkscape:document-rotation="0"
-     inkscape:current-layer="layer3"
+     inkscape:current-layer="layer20"
      inkscape:pagecheckerboard="0" /><g
      id="g10"
      inkscape:groupmode="layer"
@@ -1204,7 +1204,7 @@
        id="tspan1358-7"
        sodipodi:role="line"
        y="1818.5159"
-       x="3651.7065">1000+</tspan></text></g>
+       x="3651.7065">1100+</tspan></text></g>
 <image
    y="1599.6492"
    x="3284.3125"
@@ -1288,7 +1288,7 @@
        id="tspan278"
        sodipodi:role="line"
        x="3359.6294"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:253.333px;font-family:CharterBT;-inkscape-font-specification:'CharterBT Bold';fill:#ffffff;stroke-width:1.33333">50,000+</tspan></text></g>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:253.333px;font-family:CharterBT;-inkscape-font-specification:'CharterBT Bold';fill:#ffffff;stroke-width:1.33333">55,000+</tspan></text></g>
 <image
    transform="translate(123.28467,-576.01184)"
    clip-path="url(#clipPath2189)"
@@ -1369,7 +1369,7 @@
            style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:160px;font-family:Verdana;-inkscape-font-specification:'Verdana, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.33333"
            sodipodi:role="line"
            y="2394.9724"
-           x="1517.98">290+</tspan></text></g><text
+           x="1517.98">300+</tspan></text></g><text
        style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:86.6667px;font-family:Verdana;-inkscape-font-specification:'Verdana, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;writing-mode:lr-tb;display:inline;fill:#ffffff;fill-opacity:1;fill-rule:nonzero;stroke:none;stroke-width:1.33333"
        id="text1392-3-2"
        y="2268.0107"
@@ -1558,15 +1558,15 @@
        inkscape:label="n_histories">
 <text
    y="1401.3413"
-   x="2444.2397"
+   x="2257.7883"
    style="font-variant:normal;font-weight:normal;font-size:173.333px;font-family:CharterBT;-inkscape-font-specification:CharterBT-Roman;letter-spacing:0px;word-spacing:0px;writing-mode:lr-tb;display:inline;fill:#ffffff;fill-opacity:0.976471;fill-rule:nonzero;stroke:none;stroke-width:1.33333"
    id="text1421"><tspan
      style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.33333"
-     x="2444.2397"
+     x="2257.7883"
      sodipodi:role="line"
      id="tspan1419"
-     rotate="0 0 0"
-     y="1401.3413">1M</tspan></text></g><g
+     rotate="0 0 0 0 0"
+     y="1401.3413">1.1M</tspan></text></g><g
        style="display:inline"
        inkscape:groupmode="layer"
        id="g1413"
@@ -1581,7 +1581,7 @@
      sodipodi:role="line"
      id="tspan1409"
      rotate="0 0 0 0"
-     y="1156.2025">89M</tspan></text></g><g
+     y="1156.2025">94M</tspan></text></g><g
        style="display:inline"
        inkscape:groupmode="layer"
        id="layer3"
@@ -1614,7 +1614,7 @@
      sodipodi:role="line"
      id="tspan1369"
      rotate="0 0 0 0 0"
-     y="1401.3413">260K</tspan></text></g><g
+     y="1401.3413">270K</tspan></text></g><g
        style="display:inline"
        inkscape:label="n_jobs_run"
        id="layer14"
@@ -1627,7 +1627,7 @@
            id="tspan300"
            sodipodi:role="line"
            x="679.94604"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';fill:#ffffff;fill-opacity:1;stroke-width:1.33333">47M</tspan></text></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';fill:#ffffff;fill-opacity:1;stroke-width:1.33333">50M</tspan></text></g><g
        style="display:inline"
        inkscape:label="n_tools_installed"
        id="layer15"
