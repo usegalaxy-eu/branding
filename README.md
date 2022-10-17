@@ -72,10 +72,10 @@ Light Background                                     | Dark Background
 
 Standard                                                              | White                                                                       | Black
 --------------------------------------------------------------------- | --------------------------------------------------------------------------- | -------------------------------------
-![](euro-science-gateway\eosc_euro_science_gateway.256.png)           | ![](euro-science-gateway\eosc_euro_science_gateway_white.256.png)           | ![](euro-science-gateway\eosc_euro_science_gateway_black.256.png)
-[PNG 2048px](euro-science-gateway\eosc_euro_science_gateway.2048.png) | [PNG 2048px](euro-science-gateway\eosc_euro_science_gateway_white.2048.png) | [PNG 2048px](euro-science-gateway\eosc_euro_science_gateway_black.2048.png)
-[PNG 1024px](euro-science-gateway\eosc_euro_science_gateway.1024.png) | [PNG 1024px](euro-science-gateway\eosc_euro_science_gateway_white.1024.png) | [PNG 1024px](euro-science-gateway\eosc_euro_science_gateway_black.1024.png)
-[PNG 512px](euro-science-gateway\eosc_euro_science_gateway.512.png)   | [PNG 512px](euro-science-gateway\eosc_euro_science_gateway_white.512.png)   | [PNG 512px](euro-science-gateway\eosc_euro_science_gateway_black.512.png)
-[PNG 256px](euro-science-gateway\eosc_euro_science_gateway.256.png)   | [PNG 256px](euro-science-gateway\eosc_euro_science_gateway_white.256.png)   | [PNG 256px](euro-science-gateway\eosc_euro_science_gateway_black.256.png)
-[PNG 128px](euro-science-gateway\eosc_euro_science_gateway.128.png)   | [PNG 128px](euro-science-gateway\eosc_euro_science_gateway_white.128.png)   | [PNG 128px](euro-science-gateway\eosc_euro_science_gateway_black.128.png)
-[SVG](euro-science-gateway\eosc_euro_science_gateway.svg)             | [SVG](euro-science-gateway\eosc_euro_science_gateway_white.svg)             | [SVG](euro-science-gateway\eosc_euro_science_gateway_black.svg)
+![](./euro-science-gateway/eosc_euro_science_gateway.256.png)           | ![](./euro-science-gateway/eosc_euro_science_gateway_white.256.png)           | ![](./euro-science-gateway/eosc_euro_science_gateway_black.256.png)
+[PNG 2048px](euro-science-gateway/eosc_euro_science_gateway.2048.png) | [PNG 2048px](euro-science-gateway/eosc_euro_science_gateway_white.2048.png) | [PNG 2048px](euro-science-gateway/eosc_euro_science_gateway_black.2048.png)
+[PNG 1024px](euro-science-gateway/eosc_euro_science_gateway.1024.png) | [PNG 1024px](euro-science-gateway/eosc_euro_science_gateway_white.1024.png) | [PNG 1024px](euro-science-gateway/eosc_euro_science_gateway_black.1024.png)
+[PNG 512px](euro-science-gateway/eosc_euro_science_gateway.512.png)   | [PNG 512px](euro-science-gateway/eosc_euro_science_gateway_white.512.png)   | [PNG 512px](euro-science-gateway/eosc_euro_science_gateway_black.512.png)
+[PNG 256px](euro-science-gateway/eosc_euro_science_gateway.256.png)   | [PNG 256px](euro-science-gateway/eosc_euro_science_gateway_white.256.png)   | [PNG 256px](euro-science-gateway/eosc_euro_science_gateway_black.256.png)
+[PNG 128px](euro-science-gateway/eosc_euro_science_gateway.128.png)   | [PNG 128px](euro-science-gateway/eosc_euro_science_gateway_white.128.png)   | [PNG 128px](euro-science-gateway/eosc_euro_science_gateway_black.128.png)
+[SVG](euro-science-gateway/eosc_euro_science_gateway.svg)             | [SVG](euro-science-gateway/eosc_euro_science_gateway_white.svg)             | [SVG](euro-science-gateway/eosc_euro_science_gateway_black.svg)
