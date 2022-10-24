@@ -79,3 +79,21 @@ Standard                                                              | White   
 [PNG 256px](euro-science-gateway/eosc_euro_science_gateway.256.png)   | [PNG 256px](euro-science-gateway/eosc_euro_science_gateway_white.256.png)   | [PNG 256px](euro-science-gateway/eosc_euro_science_gateway_black.256.png)
 [PNG 128px](euro-science-gateway/eosc_euro_science_gateway.128.png)   | [PNG 128px](euro-science-gateway/eosc_euro_science_gateway_white.128.png)   | [PNG 128px](euro-science-gateway/eosc_euro_science_gateway_black.128.png)
 [SVG](euro-science-gateway/eosc_euro_science_gateway.svg)             | [SVG](euro-science-gateway/eosc_euro_science_gateway_white.svg)             | [SVG](euro-science-gateway/eosc_euro_science_gateway_black.svg)
+
+## ESG Rollup Banner
+
+Download a printable roll-up banner for Euro Science Gateway [here](./euro-science-gateway/banner/ESG_banner.md).
+
+![](./euro-science-gateway/banner/DRAFT_PREVIEW_ESG_Rollup_1x2.png)
+
+## Galaxy Rollup Banner
+
+Download a printable roll-up banner for Galaxy [here](./galaxy-galaxy/banner.md).
+
+![](./galaxy-galaxy/PREVIEW_Galaxy_Rollup_1x2.png)
+
+## Galaxy Galaxy Background
+
+Download a galaxy render in Galaxys colors [here](./galaxy-galaxy/galaxy_render_guide.md).
+
+![](./galaxy-galaxy/galaxy-poster-horizontal-preview.png)
