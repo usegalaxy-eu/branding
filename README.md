@@ -61,8 +61,8 @@ Light Background                                                        |
 ----------------------------------------                                | 
 ![](./galaxy-project/galaxy_project_white_292x75.png)                   | 
 [PNG (Large)](galaxy-project/galaxy_project_transparent_2000x708.png)   | 
-[PNG 1024px](galaxy-project/galaxy_project_transparent_292x75.png)      | 
-[PNG 512px](galaxy-project/galaxy_project_white_292x75.png)             |
+[PNG 292x75](galaxy-project/galaxy_project_transparent_292x75.png)      | 
+[PNG 292x75](galaxy-project/galaxy_project_white_292x75.png)             |
 
 
 ## Logo
