@@ -52,6 +52,19 @@ Light Background                                 | Dark Background
 [PNG 128px](useGalaxy.eu/useGalaxy.eu.128.png)   | [PNG 128px](useGalaxy.eu.inv/useGalaxy.eu.inv.128.png)
 [SVG](./useGalaxy.eu.svg)                        | [SVG](useGalaxy.eu.inv.svg)
 
+## Galaxy Project
+
+- Use this anywhere where you want to direct users to the Galaxy Project, e.g. trainings where you want to remind users "here is the URL" and stickers you
+  place which should be able to point users to the overall project with no further text.
+
+Light Background                                                        | 
+----------------------------------------                                | 
+![](./galaxy-project/galaxy_project_white_292x75.png)                   | 
+[PNG (Large)](galaxy-project/galaxy_project_transparent_2000x708.png)   | 
+[PNG 1024px](galaxy-projectu/galaxy_project_transparent_292x75.png)     | 
+[PNG 512px](galaxy-project/galaxy_project_white_292x75.png)             |
+
+
 ## Logo
 
 - Anywhere a logo is needed in our colours, without any text, e.g. favicons/etc.
