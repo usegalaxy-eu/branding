@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   xmlns:dc="http://purl.org/dc/elements/1.1/"
+   xmlns:cc="http://creativecommons.org/ns#"
+   xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+   xmlns:svg="http://www.w3.org/2000/svg"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   viewBox="0 0 100 125"
+   x="0px"
+   y="0px"
+   version="1.1"
+   id="svg20"
+   sodipodi:docname="noun_Home_2221024.svg"
+   inkscape:export-filename="/Users/bebatut/Documents/com/usegalaxy-eu/branding/usegalaxy-eu-flyer/noun_Home_2221024.png"
+   inkscape:export-xdpi="300"
+   inkscape:export-ydpi="300"
+   inkscape:version="0.92.2 5c3e80d, 2017-08-06">
+  <metadata
+     id="metadata24">
+    <rdf:RDF>
+      <cc:Work
+         rdf:about="">
+        <dc:format>image/svg+xml</dc:format>
+        <dc:type
+           rdf:resource="http://purl.org/dc/dcmitype/StillImage" />
+      </cc:Work>
+    </rdf:RDF>
+  </metadata>
+  <sodipodi:namedview
+     pagecolor="#ffffff"
+     bordercolor="#666666"
+     borderopacity="1"
+     objecttolerance="10"
+     gridtolerance="10"
+     guidetolerance="10"
+     inkscape:pageopacity="0"
+     inkscape:pageshadow="2"
+     inkscape:window-width="1036"
+     inkscape:window-height="1094"
+     id="namedview22"
+     showgrid="false"
+     inkscape:zoom="1.888"
+     inkscape:cx="-46.927966"
+     inkscape:cy="62.5"
+     inkscape:window-x="0"
+     inkscape:window-y="0"
+     inkscape:window-maximized="0"
+     inkscape:current-layer="g12" />
+  <defs
+     id="defs4">
+    <style
+       id="style2">.cls-1{fill:none;}</style>
+  </defs>
+  <title
+     id="title6">Asset 546</title>
+  <g
+     data-name="Layer 2"
+     id="g14">
+    <g
+       data-name="Layer 1"
+       id="g12">
+      <path
+         d="m 98.059322,48.229664 -9.38,-9 v 0 l -32.47,-29.7000003 a 7.62,7.62 0 0 0 -10.3,0 l -32.63,30.0000003 h 0.1 l -9.32,8.7 a 1.62,1.62 0 0 0 1.11,2.79 h 5.65 v 42.57 h 27.11 v -24.77 a 6.35,6.35 0 0 1 6.35,-6.35 h 13.56 a 6.35,6.35 0 0 1 6.35,6.35 v 24.77 h 27.11 v -42.57 h 5.64 a 1.62,1.62 0 0 0 1.12,-2.79 z"
+         id="path10"
+         style="fill:#ffffff;fill-opacity:1"
+         inkscape:connector-curvature="0" />
+    </g>
+  </g>
+</svg>
