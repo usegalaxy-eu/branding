@@ -41,6 +41,8 @@ The script updates the SVG text values for metrics that are available through pu
 
 The updater intentionally leaves values unchanged when the current dashboard only embeds an external view or no public API source is available. At the moment this applies to countries, publications, reference genomes, and Pulsar partners.
 
+If the ELIXIR AAI series has no nonzero count in the queried period, the updater prints a warning and keeps that figure unchanged while updating the other statistics.
+
 To preview the detected values without writing the SVG:
 
 ```bash

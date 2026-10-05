@@ -197,6 +197,28 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             self.assertEqual(SVG_PATH.read_text(), before)
             self.assertEqual(text_by_id(output, "text1418"), "10")
 
+    def test_cli_keeps_elixir_value_when_series_has_no_count(self):
+        for frames in ([], [{"data": {"values": [[1, 2, 3], [None, 0, 0]]}}]):
+            with self.subTest(frames=frames), tempfile.TemporaryDirectory() as tmpdir:
+                fixture_dir = Path(tmpdir)
+                for source in FIXTURE_DIR.glob("*.json"):
+                    (fixture_dir / source.name).write_bytes(source.read_bytes())
+                current_path = fixture_dir / "grafana_current.json"
+                current = json.loads(current_path.read_text())
+                current["results"]["elixir_users"]["frames"] = frames
+                current_path.write_text(json.dumps(current))
+                output = fixture_dir / "output.svg"
+                result = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), "--use-fixtures",
+                     "--fixture-dir", str(fixture_dir), "--output", str(output), str(SVG_PATH)],
+                    cwd=ROOT, check=True, capture_output=True, text=True,
+                )
+                self.assertIn("leaving ELIXIR AAI users unchanged", result.stderr)
+                self.assertNotIn("n_elixir_users:", result.stdout)
+                self.assertEqual(text_by_id(output, "text1360-7"), text_by_id(SVG_PATH, "text1360-7"))
+                self.assertEqual(text_by_id(output, "text1418"), "10")
+                self.assertEqual(text_by_id(output, "text302"), "107M")
+
     def test_save_fixtures_round_trips_live_values_without_network(self):
         sources = {
             name: json.loads((FIXTURE_DIR / f"{name}.json").read_text())

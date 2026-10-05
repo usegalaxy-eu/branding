@@ -1262,7 +1262,7 @@
        y="1425.6135"
        sodipodi:role="line"
        x="3316.9678"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;font-family:Verdana;-inkscape-font-specification:'Verdana, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;stroke-width:1.33333">8,600</tspan></text></g><g
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;font-family:Verdana;-inkscape-font-specification:'Verdana, Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;stroke-width:1.33333">7,500</tspan></text></g><g
    style="display:inline"
    inkscape:label="n_countries"
    id="layer23"
@@ -1288,7 +1288,7 @@
        id="tspan278"
        sodipodi:role="line"
        x="3359.6294"
-       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:253.333px;font-family:CharterBT;-inkscape-font-specification:'CharterBT Bold';fill:#ffffff;stroke-width:1.33333">170,000+</tspan></text></g>
+       style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:253.333px;font-family:CharterBT;-inkscape-font-specification:'CharterBT Bold';fill:#ffffff;stroke-width:1.33333">180,000+</tspan></text></g>
 <image
    transform="translate(123.28467,-576.01184)"
    clip-path="url(#clipPath2189)"
@@ -1569,7 +1569,7 @@
      sodipodi:role="line"
      id="tspan1419"
      rotate="0 0 0 0 0"
-     y="1401.3413">13M</tspan></text></g><g
+     y="1401.3413">31M</tspan></text></g><g
        style="display:inline"
        inkscape:groupmode="layer"
        id="g1413"
@@ -1584,7 +1584,7 @@
      sodipodi:role="line"
      id="tspan1409"
      rotate="0 0 0 0"
-     y="1156.2025">215M</tspan></text></g><g
+     y="1156.2025">230M</tspan></text></g><g
        style="display:inline"
        inkscape:groupmode="layer"
        id="layer3"
@@ -1617,7 +1617,7 @@
      sodipodi:role="line"
      id="tspan1369"
      rotate="0 0 0 0 0"
-     y="1401.3413">752K</tspan></text></g><g
+     y="1401.3413">802K</tspan></text></g><g
        style="display:inline"
        inkscape:label="n_jobs_run"
        id="layer14"
@@ -1630,7 +1630,7 @@
            id="tspan300"
            sodipodi:role="line"
            x="579.94604"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';fill:#ffffff;fill-opacity:1;stroke-width:1.33333">107M</tspan></text></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';fill:#ffffff;fill-opacity:1;stroke-width:1.33333">114M</tspan></text></g><g
        style="display:inline"
        inkscape:label="n_tools_installed"
        id="layer15"
@@ -1644,7 +1644,7 @@
            id="tspan1416"
            sodipodi:role="line"
            x="537.67419"
-           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.33333">4,500</tspan></text></g><g
+           style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:173.333px;font-family:Verdana;-inkscape-font-specification:'Verdana Bold';font-variant-ligatures:normal;font-variant-caps:normal;font-variant-numeric:normal;font-variant-east-asian:normal;fill:#ffffff;fill-opacity:1;stroke-width:1.33333">4,600</tspan></text></g><g
        transform="matrix(1.3333333,0,0,1.3333333,-621.78093,254.7577)"
        style="display:inline;fill:#ffffff"
        clip-path="url(#clipPath625)"

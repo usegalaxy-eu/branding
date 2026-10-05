@@ -253,7 +253,6 @@ def collect_values(
     gtn = source_data["gtn_stats"]
 
     values = {
-        "n_elixir_users": format_number(last_number(current, "elixir_users", ignore_zero=True), 100, plus=True),
         "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
         "n_registered_users": format_number(last_number(snapshots, "registered_users"), 10_000, plus=True),
         "n_tiaas_trainees": format_number(tiaas["trainees"], unit="K", plus=True),
@@ -265,6 +264,14 @@ def collect_values(
         "n_jobs_run": format_number(last_number(snapshots, "jobs"), unit="M"),
         "n_tools_installed": format_number(count_values(current, "tools"), 100),
     }
+    # Grafana fills gaps in this series with zero. Keep the existing SVG value
+    # when the queried period has no real count, rather than publishing zero.
+    try:
+        elixir_users = last_number(current, "elixir_users", ignore_zero=True)
+    except RuntimeError as error:
+        print(f"warning: {error}; leaving ELIXIR AAI users unchanged", file=sys.stderr)
+    else:
+        values["n_elixir_users"] = format_number(elixir_users, 100, plus=True)
     return values
 
 
