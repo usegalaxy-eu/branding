@@ -5,7 +5,6 @@ from __future__ import annotations
 
 import argparse
 import copy
-import datetime as dt
 import html
 import json
 import re
@@ -55,15 +54,6 @@ def grafana_query(queries: list[dict], from_ms: int, to_ms: int) -> dict:
     return json.loads(data)
 
 
-def read_json(path: Path) -> dict:
-    return json.loads(path.read_text())
-
-
-def write_json(path: Path, data: dict) -> None:
-    path.parent.mkdir(parents=True, exist_ok=True)
-    path.write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
-
-
 def compact_grafana_result(result: dict, value_limit: int) -> dict:
     compact = copy.deepcopy(result)
     for response in compact.get("results", {}).values():
@@ -101,7 +91,17 @@ def count_values(result: dict, ref_id: str) -> int:
 def latest_snapshot_queries() -> list[dict]:
     queries = []
 
-    def add(ref_id: str, measurement: str, where: str = "$timeFilter") -> None:
+    measurements = {
+        "registered_users": "server-users",
+        "histories": "server-histories",
+        "jobs": "server-jobs",
+        "datasets": "server-datasets",
+        "workflows": "server-workflow-invocations",
+    }
+    for ref_id, measurement in measurements.items():
+        where = "$timeFilter"
+        if ref_id == "registered_users":
+            where += " AND \"deleted\"='f' AND \"purged\"='f' AND \"external\"='f'"
         queries.append(
             {
                 "refId": ref_id,
@@ -116,16 +116,6 @@ def latest_snapshot_queries() -> list[dict]:
                 "maxDataPoints": 500,
             }
         )
-
-    add(
-        "registered_users",
-        "server-users",
-        '$timeFilter AND "deleted"=\'f\' AND "purged"=\'f\' AND "external"=\'f\'',
-    )
-    add("histories", "server-histories")
-    add("jobs", "server-jobs")
-    add("datasets", "server-datasets")
-    add("workflows", "server-workflow-invocations")
     return queries
 
 
@@ -185,10 +175,6 @@ def parse_tiaas_html(text: str) -> dict[str, int]:
     }
 
 
-def parse_tiaas() -> dict[str, int]:
-    return parse_tiaas_html(fetch(TIAAS_URL).decode("utf-8", errors="replace"))
-
-
 def parse_gtn_html(text: str) -> dict[str, int]:
     match = re.search(r'<div class="card-title">([\d,]+)</div>\s*<div class="card-text">Tutorials</div>', text)
     if not match:
@@ -196,32 +182,27 @@ def parse_gtn_html(text: str) -> dict[str, int]:
     return {"tutorials": int(match.group(1).replace(",", ""))}
 
 
-def parse_gtn() -> dict[str, int]:
-    return parse_gtn_html(fetch(GTN_URL).decode("utf-8", errors="replace"))
+def format_number(value: int, step: int = 1, *, unit: str = "", plus: bool = False) -> str:
+    """Format a count, rounding down for '+' so the displayed minimum is accurate."""
+    if plus:
+        # Match the displayed precision before applying the usual formatting.
+        if unit == "M":
+            precision = 100_000 if value < 10_000_000 else 1_000_000
+        elif unit == "K":
+            precision = 1_000
+        else:
+            precision = step if abs(value) >= step else 1
+        value = value // precision * precision
 
-
-def fmt_int(value: int) -> str:
-    return f"{value:,}"
-
-
-def fmt_nearest(value: int, step: int, plus: bool = False) -> str:
-    if abs(value) < step:
-        return fmt_int(value) + ("+" if plus else "")
-    rounded = int(round(value / step) * step)
-    suffix = "+" if plus else ""
-    return f"{rounded:,}{suffix}"
-
-
-def fmt_k(value: int, plus: bool = False) -> str:
-    rounded = int(round(value / 1_000))
-    return f"{rounded}K" + ("+" if plus else "")
-
-
-def fmt_m(value: int) -> str:
-    rounded = value / 1_000_000
-    if rounded < 10:
-        return f"{rounded:.1f}M"
-    return f"{int(round(rounded))}M"
+    if unit == "M":
+        millions = value / 1_000_000
+        text = f"{millions:.1f}M" if millions < 10 else f"{round(millions)}M"
+    elif unit == "K":
+        text = f"{round(value / 1_000)}K"
+    else:
+        rounded = round(value / step) * step if abs(value) >= step else value
+        text = f"{rounded:,}"
+    return text + ("+" if plus else "")
 
 
 def replace_text(svg: str, text_id: str, value: str) -> str:
@@ -237,71 +218,52 @@ def replace_text(svg: str, text_id: str, value: str) -> str:
     return svg[: match.start(2)] + body + svg[match.end(2) :]
 
 
-def collect_source_data(
-    *,
-    fixture_dir: Path | None = None,
-    save_fixtures: bool = False,
-    fixture_value_limit: int = DEFAULT_FIXTURE_VALUE_LIMIT,
-) -> dict[str, dict]:
-    now_ms = int(time.time() * 1000)
-    six_hours_ago_ms = now_ms - 6 * 60 * 60 * 1000
-    one_year_ago_ms = int((dt.datetime.now(dt.UTC) - dt.timedelta(days=365)).timestamp() * 1000)
-
-    if fixture_dir and not save_fixtures:
-        return {
-            "grafana_snapshots": read_json(fixture_dir / "grafana_snapshots.json"),
-            "grafana_current": read_json(fixture_dir / "grafana_current.json"),
-            "tiaas_stats": read_json(fixture_dir / "tiaas_stats.json"),
-            "gtn_stats": read_json(fixture_dir / "gtn_stats.json"),
-        }
-
-    snapshots = grafana_query(latest_snapshot_queries(), one_year_ago_ms, now_ms)
-    current = grafana_query(current_queries(), six_hours_ago_ms, now_ms)
-    tiaas = parse_tiaas()
-    gtn = parse_gtn()
-
-    source_data = {
-        "grafana_snapshots": snapshots,
-        "grafana_current": current,
-        "tiaas_stats": tiaas,
-        "gtn_stats": gtn,
-    }
-    if fixture_dir and save_fixtures:
-        for name, data in source_data.items():
-            if name.startswith("grafana_"):
-                data = compact_grafana_result(data, fixture_value_limit)
-            write_json(fixture_dir / f"{name}.json", data)
-    return source_data
-
-
 def collect_values(
     *,
     fixture_dir: Path | None = None,
     save_fixtures: bool = False,
     fixture_value_limit: int = DEFAULT_FIXTURE_VALUE_LIMIT,
 ) -> dict[str, str]:
-    source_data = collect_source_data(
-        fixture_dir=fixture_dir,
-        save_fixtures=save_fixtures,
-        fixture_value_limit=fixture_value_limit,
-    )
+    """Load the four stats sources, optionally save fixtures, then format the counts."""
+    if fixture_dir and not save_fixtures:
+        source_data = {}
+        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats"):
+            source_data[name] = json.loads((fixture_dir / f"{name}.json").read_text())
+    else:
+        now_ms = int(time.time() * 1000)
+        six_hours_ago_ms = now_ms - 6 * 60 * 60 * 1000
+        one_year_ago_ms = now_ms - 365 * 24 * 60 * 60 * 1000
+        source_data = {
+            "grafana_snapshots": grafana_query(latest_snapshot_queries(), one_year_ago_ms, now_ms),
+            "grafana_current": grafana_query(current_queries(), six_hours_ago_ms, now_ms),
+            "tiaas_stats": parse_tiaas_html(fetch(TIAAS_URL).decode("utf-8", errors="replace")),
+            "gtn_stats": parse_gtn_html(fetch(GTN_URL).decode("utf-8", errors="replace")),
+        }
+
+    if fixture_dir and save_fixtures:
+        fixture_dir.mkdir(parents=True, exist_ok=True)
+        for name, data in source_data.items():
+            if name.startswith("grafana_"):
+                data = compact_grafana_result(data, fixture_value_limit)
+            (fixture_dir / f"{name}.json").write_text(json.dumps(data, indent=2, sort_keys=True) + "\n")
+
     snapshots = source_data["grafana_snapshots"]
     current = source_data["grafana_current"]
     tiaas = source_data["tiaas_stats"]
     gtn = source_data["gtn_stats"]
 
     values = {
-        "n_elixir_users": fmt_nearest(last_number(current, "elixir_users", ignore_zero=True), 100, plus=True),
-        "n_monthly_users": fmt_nearest(last_number(current, "monthly_users"), 100),
-        "n_registered_users": fmt_nearest(last_number(snapshots, "registered_users"), 10_000, plus=True),
-        "n_tiaas_trainees": fmt_k(tiaas["trainees"], plus=True),
-        "n_tiaas_events": fmt_nearest(tiaas["events"], 100, plus=True),
-        "n_GTN_tutorials": fmt_nearest(gtn["tutorials"], 100, plus=True),
-        "n_histories": fmt_m(last_number(snapshots, "histories")),
-        "n_datasets": fmt_m(last_number(snapshots, "datasets")),
-        "n_workflow_executions": fmt_k(last_number(snapshots, "workflows")),
-        "n_jobs_run": fmt_m(last_number(snapshots, "jobs")),
-        "n_tools_installed": fmt_nearest(count_values(current, "tools"), 100),
+        "n_elixir_users": format_number(last_number(current, "elixir_users", ignore_zero=True), 100, plus=True),
+        "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
+        "n_registered_users": format_number(last_number(snapshots, "registered_users"), 10_000, plus=True),
+        "n_tiaas_trainees": format_number(tiaas["trainees"], unit="K", plus=True),
+        "n_tiaas_events": format_number(tiaas["events"], 100, plus=True),
+        "n_GTN_tutorials": format_number(gtn["tutorials"], 100, plus=True),
+        "n_histories": format_number(last_number(snapshots, "histories"), unit="M"),
+        "n_datasets": format_number(last_number(snapshots, "datasets"), unit="M"),
+        "n_workflow_executions": format_number(last_number(snapshots, "workflows"), unit="K"),
+        "n_jobs_run": format_number(last_number(snapshots, "jobs"), unit="M"),
+        "n_tools_installed": format_number(count_values(current, "tools"), 100),
     }
     return values
 
@@ -351,16 +313,13 @@ def main() -> int:
     for key, value in values.items():
         svg = replace_text(svg, TEXT_IDS[key], value)
 
-    if args.dry_run:
-        for key in sorted(values):
-            print(f"{key}: {values[key]}")
-    else:
+    if not args.dry_run:
         output = args.output or args.svg
         output.write_text(svg)
-        for key in sorted(values):
-            print(f"{key}: {values[key]}")
-        if args.output:
-            print(f"wrote: {args.output}")
+    for key in sorted(values):
+        print(f"{key}: {values[key]}")
+    if not args.dry_run and args.output:
+        print(f"wrote: {args.output}")
     return 0
 
 

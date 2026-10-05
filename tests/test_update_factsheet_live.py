@@ -54,8 +54,8 @@ class UpdateFactsheetLiveIntegrationTests(unittest.TestCase):
             self.assertGreater(update_factsheet.last_number(snapshots, ref_id), 0)
 
     def test_live_tiaas_and_gtn_pages_parse(self):
-        tiaas = update_factsheet.parse_tiaas()
-        gtn = update_factsheet.parse_gtn()
+        tiaas = update_factsheet.parse_tiaas_html(update_factsheet.fetch(update_factsheet.TIAAS_URL).decode("utf-8", errors="replace"))
+        gtn = update_factsheet.parse_gtn_html(update_factsheet.fetch(update_factsheet.GTN_URL).decode("utf-8", errors="replace"))
 
         self.assertGreater(tiaas["events"], 0)
         self.assertGreater(tiaas["trainees"], 0)

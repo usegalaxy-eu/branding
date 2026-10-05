@@ -4,6 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -28,17 +29,36 @@ def text_by_id(svg_path, text_id):
 
 class UpdateFactsheetSmokeTests(unittest.TestCase):
     def test_formatters_cover_display_rounding(self):
-        self.assertEqual(update_factsheet.fmt_nearest(173286, 10_000, plus=True), "170,000+")
-        self.assertEqual(update_factsheet.fmt_nearest(10, 100), "10")
-        self.assertEqual(update_factsheet.fmt_k(24048, plus=True), "24K+")
-        self.assertEqual(update_factsheet.fmt_m(106911907), "107M")
+        self.assertEqual(update_factsheet.format_number(173286, 10_000, plus=True), "170,000+")
+        self.assertEqual(update_factsheet.format_number(10, 100), "10")
+        self.assertEqual(update_factsheet.format_number(24048, unit="K", plus=True), "24K+")
+        self.assertEqual(update_factsheet.format_number(106911907, unit="M"), "107M")
+
+    def test_plus_counts_round_down_at_display_precision(self):
+        cases = [
+            (176000, 10_000, "", "170,000+"),
+            (180000, 10_000, "", "180,000+"),
+            (10, 100, "", "10+"),
+            (24600, 1, "K", "24K+"),
+            (1999999, 1, "M", "1.9M+"),
+            (9999999, 1, "M", "9.9M+"),
+            (106911907, 1, "M", "106M+"),
+            (0, 100, "", "0+"),
+        ]
+        for value, step, unit, expected in cases:
+            with self.subTest(value=value, unit=unit):
+                self.assertEqual(
+                    update_factsheet.format_number(value, step, unit=unit, plus=True), expected
+                )
+        self.assertEqual(update_factsheet.format_number(176000, 10_000), "180,000")
+        self.assertEqual(update_factsheet.format_number(24600, unit="K"), "25K")
 
     def test_compact_fixture_values_drive_metrics(self):
-        snapshots = update_factsheet.read_json(FIXTURE_DIR / "grafana_snapshots.json")
-        current = update_factsheet.read_json(FIXTURE_DIR / "grafana_current.json")
+        snapshots = json.loads((FIXTURE_DIR / "grafana_snapshots.json").read_text())
+        current = json.loads((FIXTURE_DIR / "grafana_current.json").read_text())
 
         self.assertEqual(update_factsheet.last_number(snapshots, "jobs"), 106911907)
-        self.assertEqual(update_factsheet.fmt_m(update_factsheet.last_number(snapshots, "jobs")), "107M")
+        self.assertEqual(update_factsheet.format_number(update_factsheet.last_number(snapshots, "jobs"), unit="M"), "107M")
         self.assertEqual(update_factsheet.count_values(current, "tools"), 10)
 
     def test_compact_grafana_result_trims_each_values_array_without_mutating_source(self):
@@ -177,13 +197,26 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             self.assertEqual(SVG_PATH.read_text(), before)
             self.assertEqual(text_by_id(output, "text1418"), "10")
 
-    def test_write_json_creates_parent_directories_and_read_json_round_trips(self):
+    def test_save_fixtures_round_trips_live_values_without_network(self):
+        sources = {
+            name: json.loads((FIXTURE_DIR / f"{name}.json").read_text())
+            for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats")
+        }
+        tiaas_html = b"Overall 615 Events since 2018 Overall 24,048 Students taught"
+        gtn_html = b'<div class="card-title">527</div><div class="card-text">Tutorials</div>'
         with tempfile.TemporaryDirectory() as tmpdir:
-            path = Path(tmpdir) / "nested" / "fixture.json"
-            update_factsheet.write_json(path, {"z": [1, 2], "a": "value"})
-
-            self.assertEqual(json.loads(path.read_text()), {"a": "value", "z": [1, 2]})
-            self.assertEqual(update_factsheet.read_json(path), {"a": "value", "z": [1, 2]})
+            fixture_dir = Path(tmpdir) / "nested" / "fixtures"
+            with patch.object(update_factsheet, "fetch", side_effect=[
+                json.dumps(sources["grafana_snapshots"]).encode(),
+                json.dumps(sources["grafana_current"]).encode(),
+                tiaas_html,
+                gtn_html,
+            ]) as fetch:
+                values = update_factsheet.collect_values(fixture_dir=fixture_dir, save_fixtures=True)
+                self.assertEqual(fetch.call_count, 4)
+            self.assertEqual(update_factsheet.collect_values(fixture_dir=fixture_dir), values)
+            for name, expected in sources.items():
+                self.assertEqual(json.loads((fixture_dir / f"{name}.json").read_text()), expected)
 
 
 if __name__ == "__main__":

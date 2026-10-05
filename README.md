@@ -90,31 +90,6 @@ Run live integration tests against the real public endpoints:
 RUN_LIVE_API_TESTS=1 python3 -m unittest tests/test_update_factsheet_live.py
 ```
 
-Show line coverage for `factsheet/update_factsheet.py` without installing extra dependencies:
-
-```bash
-python3 tests/coverage_update_factsheet.py --show-covered
-```
-
-To keep the raw annotated `.cover` files:
-
-```bash
-python3 tests/coverage_update_factsheet.py --coverdir /tmp/factsheet-cover
-```
-
-Alternative coverage report using `coverage.py`:
-
-```bash
-python3 -m pip install -r requirements-dev.txt
-python3 tests/coverage_update_factsheet_coveragepy.py --show-covered
-```
-
-Optional HTML report:
-
-```bash
-python3 tests/coverage_update_factsheet_coveragepy.py --html-dir /tmp/factsheet-coverage-html
-```
-
 The updater queries:
 
 - `https://stats.galaxyproject.eu/`
