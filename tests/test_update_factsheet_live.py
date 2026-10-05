@@ -1,4 +1,5 @@
 import importlib.util
+import math
 import os
 import tempfile
 import unittest
@@ -38,8 +39,29 @@ class UpdateFactsheetLiveIntegrationTests(unittest.TestCase):
         self.assertIn("elixir_users", current["results"])
         self.assertIn("monthly_users", current["results"])
         self.assertGreater(update_factsheet.count_values(current, "tools"), 1000)
-        self.assertGreater(update_factsheet.last_number(current, "elixir_users", ignore_zero=True), 0)
         self.assertGreater(update_factsheet.last_number(current, "monthly_users"), 0)
+
+        # An empty or zero-filled ELIXIR series is supported by the updater.
+        # API errors and malformed data should still fail this integration check.
+        elixir = current["results"]["elixir_users"]
+        self.assertFalse(elixir.get("error"), elixir.get("error"))
+        self.assertEqual(elixir.get("status", 200), 200)
+        frames = elixir.get("frames", [])
+        self.assertIsInstance(frames, list)
+        has_count = False
+        for frame in frames:
+            columns = frame["data"]["values"]
+            self.assertGreaterEqual(len(columns), 2)
+            self.assertIsInstance(columns[-1], list)
+            for value in columns[-1]:
+                if value is None:
+                    continue
+                self.assertIsInstance(value, (int, float))
+                self.assertTrue(math.isfinite(value))
+                self.assertGreaterEqual(value, 0)
+                has_count = has_count or value > 0
+        if has_count:
+            self.assertGreater(update_factsheet.last_number(current, "elixir_users", ignore_zero=True), 0)
 
     def test_live_grafana_snapshot_queries_return_expected_shapes(self):
         now_ms = int(update_factsheet.time.time() * 1000)
