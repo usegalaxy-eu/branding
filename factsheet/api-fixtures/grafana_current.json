@@ -1,5 +1,46 @@
 {
   "results": {
+    "egi_checkin_users": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1782764520000
+              ],
+              [
+                523
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "labels": {
+                  "provider": "egi-checkin"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "name": "users-with-oidc.last { provider: egi-checkin }",
+            "refId": "egi_checkin_users"
+          }
+        }
+      ],
+      "status": 200
+    },
     "elixir_users": {
       "frames": [
         {
