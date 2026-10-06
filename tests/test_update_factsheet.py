@@ -337,7 +337,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 "n_GTN_tutorials": "500+",
                 "n_pubs_global": "24K+",
                 "n_pulsar_nodes": "16",
-                "n_reference_genomes": "2",
+                "n_reference_genomes": "2+",
                 "n_datasets": "215M",
                 "n_elixir_users": "300+",
                 "n_egi_checkin": "500+",

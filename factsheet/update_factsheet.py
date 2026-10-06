@@ -411,7 +411,9 @@ def collect_values(
     values = {
         "n_pulsar_nodes": format_number(count_pulsar_inventory(source_data["pulsar_destinations"])),
         "n_pubs_global": format_number(source_data["scholar_stats"]["citations"], unit="K", plus=True),
-        "n_reference_genomes": format_number(count_reference_genomes(source_data["genomes"], source_data["all_fasta"])),
+        "n_reference_genomes": format_number(
+            count_reference_genomes(source_data["genomes"], source_data["all_fasta"]), 10, plus=True
+        ),
         "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
         "n_registered_users": format_number(last_number(snapshots, "registered_users"), 10_000, plus=True),
         "n_tiaas_trainees": format_number(tiaas["trainees"], unit="K", plus=True),
