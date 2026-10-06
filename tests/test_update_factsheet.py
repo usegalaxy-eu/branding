@@ -61,6 +61,17 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
         self.assertEqual(update_factsheet.format_number(update_factsheet.last_number(snapshots, "jobs"), unit="M"), "107M")
         self.assertEqual(update_factsheet.count_values(current, "tools"), 10)
 
+    def test_elixir_users_query_targets_life_science_provider(self):
+        query = next(
+            query for query in update_factsheet.current_queries()
+            if query["refId"] == "elixir_users"
+        )
+
+        self.assertEqual(
+            query["tags"],
+            [{"key": "provider::tag", "operator": "=", "value": "life_science"}],
+        )
+
     def test_compact_grafana_result_trims_each_values_array_without_mutating_source(self):
         source = {
             "results": {

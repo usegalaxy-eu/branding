@@ -138,7 +138,7 @@ def current_queries() -> list[dict]:
             "resultFormat": "time_series",
             "orderByTime": "ASC",
             "select": [[{"type": "field", "params": ["count"]}, {"type": "last", "params": []}]],
-            "tags": [{"key": "provider::tag", "operator": "=", "value": "elixir"}],
+            "tags": [{"key": "provider::tag", "operator": "=", "value": "life_science"}],
             "groupBy": [
                 {"type": "time", "params": ["60000ms"]},
                 {"type": "tag", "params": ["provider"]},
