@@ -4,7 +4,9 @@
 from __future__ import annotations
 
 import argparse
+import cairosvg
 import copy
+import datetime
 import html
 import json
 import re
@@ -24,6 +26,28 @@ GENOMES_URL = "https://usegalaxy.eu/api/genomes"
 ALL_FASTA_URL = "https://usegalaxy.eu/api/tool_data/all_fasta"
 SCHOLAR_URL = "https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ"
 DEFAULT_FIXTURE_DIR = Path("factsheet/api-fixtures")
+DEFAULT_FIXTURE_VALUE_LIMIT = 10
+
+# PNG output: try native renderers first, fall back to the cairosvg module.
+PNG_WIDTH = 4240  # match the width of the previously published factsheet PNG
+PNG_RENDERERS = (
+    ("inkscape", ("inkscape", "--export-type=png", "--export-filename")),
+    ("rsvg-convert", ("rsvg-convert", "-o")),
+)
+
+
+def write_png(svg_path: Path, png_path: Path) -> None:
+    """Render the SVG to PNG under png_path."""
+    try:
+        cairosvg.svg2png(
+            url=str(svg_path),
+            write_to=str(png_path),
+            output_width=PNG_WIDTH,
+        )
+    except Exception as error:
+        raise RuntimeError(f"Failed to render PNG: {error}") from error
+
+
 DEFAULT_FIXTURE_VALUE_LIMIT = 10
 
 TEXT_IDS = {
@@ -376,6 +400,11 @@ def main() -> int:
         help="Output path (default: <input stem>_rendered.svg beside the template). Must differ from the input.",
     )
     parser.add_argument(
+        "--no-png",
+        action="store_true",
+        help="Skip rendering a PNG version of the output SVG.",
+    )
+    parser.add_argument(
         "--fixture-dir",
         default=DEFAULT_FIXTURE_DIR,
         type=Path,
@@ -400,9 +429,13 @@ def main() -> int:
     args = parser.parse_args()
     if args.save_fixtures and args.use_fixtures:
         parser.error("--save-fixtures and --use-fixtures cannot be combined")
-    output = args.output or args.svg.with_name(f"{args.svg.stem}_rendered{args.svg.suffix}")
+    update_date = datetime.date.today().strftime("%d.%m.%Y")
+    output = args.output or args.svg.with_name(f"{args.svg.stem}_rendered_{update_date}{args.svg.suffix}")
     if output.resolve() == args.svg.resolve() or (output.exists() and output.samefile(args.svg)):
         parser.error("output must differ from the input SVG template")
+    png_output = output.with_suffix(".png")
+    if not args.no_png and not args.dry_run and png_output.resolve() == args.svg.resolve():
+        parser.error("PNG output must differ from the input SVG template")
 
     fixture_dir = args.fixture_dir if args.save_fixtures or args.use_fixtures else None
     values = collect_values(
@@ -416,10 +449,14 @@ def main() -> int:
 
     if not args.dry_run:
         output.write_text(svg)
+        if not args.no_png:
+            write_png(output, png_output)
     for key in sorted(values):
         print(f"{key}: {values[key]}")
     if not args.dry_run:
         print(f"wrote: {output}")
+        if not args.no_png:
+            print(f"wrote: {png_output}")
     return 0
 
 
