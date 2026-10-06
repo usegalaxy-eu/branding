@@ -33,6 +33,7 @@ TEXT_IDS = {
     "n_pubs_global": "text414",
     "n_reference_genomes": "text1418-4",
     "n_elixir_users": "text1360-7",
+    "n_egi_checkin": "text60591",
     "n_monthly_users": "text354",
     "n_registered_users": "text280",
     "n_tiaas_trainees": "text1392-3-2-9",
@@ -155,23 +156,8 @@ def current_queries() -> list[dict]:
             "intervalMs": 60_000,
             "maxDataPoints": 5_000,
         },
-        {
-            "refId": "elixir_users",
-            "datasource": CURRENT_DS,
-            "measurement": "users-with-oidc",
-            "policy": "default",
-            "resultFormat": "time_series",
-            "orderByTime": "ASC",
-            "select": [[{"type": "field", "params": ["count"]}, {"type": "last", "params": []}]],
-            "tags": [{"key": "provider::tag", "operator": "=", "value": "life_science"}],
-            "groupBy": [
-                {"type": "time", "params": ["60000ms"]},
-                {"type": "tag", "params": ["provider"]},
-                {"type": "fill", "params": ["0"]},
-            ],
-            "intervalMs": 60_000,
-            "maxDataPoints": 500,
-        },
+        oidc_users_query("elixir_users", "life_science"),
+        oidc_users_query("egi_checkin_users", "egi-checkin"),
         {
             "refId": "monthly_users",
             "datasource": CURRENT_DS,
@@ -185,6 +171,26 @@ def current_queries() -> list[dict]:
             "maxDataPoints": 10,
         },
     ]
+
+
+def oidc_users_query(ref_id: str, provider: str) -> dict:
+    return {
+        "refId": ref_id,
+        "datasource": CURRENT_DS,
+        "measurement": "users-with-oidc",
+        "policy": "default",
+        "resultFormat": "time_series",
+        "orderByTime": "ASC",
+        "select": [[{"type": "field", "params": ["count"]}, {"type": "last", "params": []}]],
+        "tags": [{"key": "provider::tag", "operator": "=", "value": provider}],
+        "groupBy": [
+            {"type": "time", "params": ["60000ms"]},
+            {"type": "tag", "params": ["provider"]},
+            {"type": "fill", "params": ["0"]},
+        ],
+        "intervalMs": 60_000,
+        "maxDataPoints": 500,
+    }
 
 
 def parse_tiaas_html(text: str) -> dict[str, int]:
@@ -351,6 +357,12 @@ def collect_values(
         print(f"warning: {error}; leaving ELIXIR AAI users unchanged (placeholder remains in template-based output)", file=sys.stderr)
     else:
         values["n_elixir_users"] = format_number(elixir_users, 100, plus=True)
+    try:
+        egi_checkin_users = last_number(current, "egi_checkin_users", ignore_zero=True)
+    except RuntimeError as error:
+        print(f"warning: {error}; leaving EGI Check-in users unchanged", file=sys.stderr)
+    else:
+        values["n_egi_checkin"] = format_number(egi_checkin_users, 100, plus=True)
     return values
 
 

@@ -34,6 +34,7 @@ The script populates the SVG text values for metrics that are available through 
 - registered users
 - monthly active users
 - ELIXIR AAI users
+- EGI Check-in users
 - tools installed
 - jobs
 - datasets
@@ -50,7 +51,7 @@ Global publications come from the [Galaxy Zotero library](https://www.zotero.org
 
 Reference genomes are counted as distinct genome IDs from [the genomes API](https://usegalaxy.eu/api/genomes) that also occur in the `dbkey` column of [the all_fasta table](https://usegalaxy.eu/api/tool_data/all_fasta). Duplicate rows and tool/reference variants sharing a dbkey count once; empty, `?`, and `draft` keys are excluded. This conservative identifier count does not merge undocumented aliases. IDs present in only one source are excluded and their counts are reported in a warning. Empty, malformed, or non-overlapping inventories stop the update rather than produce a misleading zero. The checked-in inventory fixtures are small representative samples (two shared genome IDs), covering duplicate rows, shared dbkeys, placeholders, and IDs unique to either source. Offline output reflects this sample, not the live inventory. `--save-fixtures` saves both live inventory responses in full. Interface documentation: [genomes](https://docs.galaxyproject.org/en/latest/_modules/galaxy/webapps/galaxy/api/genomes.html) and [data tables](https://docs.galaxyproject.org/en/release_26.1/_modules/galaxy/webapps/galaxy/api/tool_data.html).
 
-If the ELIXIR AAI series has no nonzero count in the queried period, the updater prints a warning and leaves `{{elixir_users}}` visible in template-based output while updating the other statistics. Resolve that missing figure before publishing.
+If the ELIXIR AAI or EGI Check-in series has no nonzero count in the queried period, the updater prints a warning and keeps that figure unchanged while updating the other statistics.
 
 To preview the detected values without writing the SVG:
 

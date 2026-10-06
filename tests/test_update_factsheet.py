@@ -191,6 +191,17 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             [{"key": "provider::tag", "operator": "=", "value": "life_science"}],
         )
 
+    def test_egi_checkin_query_targets_egi_checkin_provider(self):
+        query = next(
+            query for query in update_factsheet.current_queries()
+            if query["refId"] == "egi_checkin_users"
+        )
+
+        self.assertEqual(
+            query["tags"],
+            [{"key": "provider::tag", "operator": "=", "value": "egi-checkin"}],
+        )
+
     def test_compact_grafana_result_trims_each_values_array_without_mutating_source(self):
         source = {
             "results": {
@@ -281,6 +292,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             output.write_text(svg)
 
             ET.parse(output)
+            self.assertEqual(text_by_id(output, "text60591"), "500+")
             self.assertEqual(text_by_id(output, "text1418"), "10")
             self.assertEqual(text_by_id(output, "text302"), "107M")
             self.assertEqual(text_by_id(output, "text1411"), "215M")
@@ -294,6 +306,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 "n_reference_genomes": "2",
                 "n_datasets": "215M",
                 "n_elixir_users": "300+",
+                "n_egi_checkin": "500+",
                 "n_histories": "13M",
                 "n_jobs_run": "107M",
                 "n_monthly_users": "8,600",
@@ -348,6 +361,28 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 self.assertIn("leaving ELIXIR AAI users unchanged", result.stderr)
                 self.assertNotIn("n_elixir_users:", result.stdout)
                 self.assertEqual(text_by_id(output, "text1360-7"), text_by_id(SVG_PATH, "text1360-7"))
+                self.assertEqual(text_by_id(output, "text1418"), "10")
+                self.assertEqual(text_by_id(output, "text302"), "107M")
+
+    def test_cli_keeps_egi_checkin_value_when_series_has_no_count(self):
+        for frames in ([], [{"data": {"values": [[1, 2, 3], [None, 0, 0]]}}]):
+            with self.subTest(frames=frames), tempfile.TemporaryDirectory() as tmpdir:
+                fixture_dir = Path(tmpdir)
+                for source in FIXTURE_DIR.glob("*.json"):
+                    (fixture_dir / source.name).write_bytes(source.read_bytes())
+                current_path = fixture_dir / "grafana_current.json"
+                current = json.loads(current_path.read_text())
+                current["results"]["egi_checkin_users"]["frames"] = frames
+                current_path.write_text(json.dumps(current))
+                output = fixture_dir / "output.svg"
+                result = subprocess.run(
+                    [sys.executable, str(MODULE_PATH), "--use-fixtures",
+                     "--fixture-dir", str(fixture_dir), "--output", str(output), str(SVG_PATH)],
+                    cwd=ROOT, check=True, capture_output=True, text=True,
+                )
+                self.assertIn("leaving EGI Check-in users unchanged", result.stderr)
+                self.assertNotIn("n_egi_checkin:", result.stdout)
+                self.assertEqual(text_by_id(output, "text60591"), text_by_id(SVG_PATH, "text60591"))
                 self.assertEqual(text_by_id(output, "text1418"), "10")
                 self.assertEqual(text_by_id(output, "text302"), "107M")
 
