@@ -856,33 +856,7 @@
 
 
 
-<flowRoot
-   xml:space="preserve"
-   id="flowRoot5158"
-   style="font-style:normal;font-weight:normal;font-size:96px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-   transform="matrix(0.75000002,0,0,0.75000002,0,-8.7000002e-5)"><flowRegion
-     id="flowRegion5160"
-     style="font-size:96px"><rect
-       id="rect5162"
-       width="315.25424"
-       height="231.18645"
-       x="2805.7627"
-       y="2021.13"
-       style="font-size:95.99999984px;" /></flowRegion><flowPara
-     id="flowPara5164"
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ff9955">272</flowPara></flowRoot><flowRoot
-   xml:space="preserve"
-   id="flowRoot5166"
-   style="font-style:normal;font-weight:normal;font-size:160px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"><flowRegion
-     id="flowRegion5168"
-     style="font-size:160px"><rect
-       id="rect5170"
-       width="332.76837"
-       height="245.19775"
-       x="2791.7515"
-       y="2031.6384"
-       style="font-size:160px;" /></flowRegion><flowPara
-     id="flowPara5172" /></flowRoot>
+
 
 
 
@@ -1892,33 +1866,7 @@
 
 
 
-<flowRoot
-   transform="matrix(0.75000002,0,0,0.75000002,0,-8.7000002e-5)"
-   style="font-style:normal;font-weight:normal;font-size:96px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-   id="flowRoot2152"
-   xml:space="preserve"><flowRegion
-     style="font-size:96px"
-     id="flowRegion2148"><rect
-       style="font-size:95.99999984px;"
-       y="2021.13"
-       x="2805.7627"
-       height="231.18645"
-       width="315.25424"
-       id="rect2146" /></flowRegion><flowPara
-     style="font-style:normal;font-variant:normal;font-weight:bold;font-stretch:normal;font-size:213.333px;font-family:sans-serif;-inkscape-font-specification:'sans-serif Bold';fill:#ff9955"
-     id="flowPara2150">272</flowPara></flowRoot><flowRoot
-   style="font-style:normal;font-weight:normal;font-size:160px;line-height:1.25;font-family:sans-serif;letter-spacing:0px;word-spacing:0px;fill:#000000;fill-opacity:1;stroke:none"
-   id="flowRoot2160"
-   xml:space="preserve"><flowRegion
-     style="font-size:160px"
-     id="flowRegion2156"><rect
-       style="font-size:160px;"
-       y="2031.6384"
-       x="2791.7515"
-       height="245.19775"
-       width="332.76837"
-       id="rect2154" /></flowRegion><flowPara
-     id="flowPara2158" /></flowRoot>
+
 
 
 
