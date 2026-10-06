@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Update the automatable UseGalaxy.eu factsheet SVG from public stats APIs."""
+"""Render the UseGalaxy.eu factsheet template to a separate SVG using public stats."""
 
 from __future__ import annotations
 
@@ -20,10 +20,18 @@ HISTORICAL_DS = {"type": "influxdb", "uid": "PEBD82B4560F292BD"}
 CURRENT_DS = {"type": "influxdb", "uid": "P9B81C0353945995B"}
 TIAAS_URL = "https://usegalaxy.eu/tiaas/stats/"
 GTN_URL = "https://training.galaxyproject.org/training-material/stats/#gtn-statistics"
+GENOMES_URL = "https://usegalaxy.eu/api/genomes"
+ALL_FASTA_URL = "https://usegalaxy.eu/api/tool_data/all_fasta"
+ZOTERO_URL = (
+    "https://api.zotero.org/groups/1732893/items/top"
+    "?format=json&limit=1&itemType=-attachment%20%7C%7C%20note%20%7C%7C%20annotation"
+)
 DEFAULT_FIXTURE_DIR = Path("factsheet/api-fixtures")
 DEFAULT_FIXTURE_VALUE_LIMIT = 10
 
 TEXT_IDS = {
+    "n_pubs_global": "text414",
+    "n_reference_genomes": "text1418-4",
     "n_elixir_users": "text1360-7",
     "n_monthly_users": "text354",
     "n_registered_users": "text280",
@@ -52,6 +60,23 @@ def grafana_query(queries: list[dict], from_ms: int, to_ms: int) -> dict:
         headers={"Content-Type": "application/json"},
     )
     return json.loads(data)
+
+
+def fetch_zotero_stats() -> dict[str, int]:
+    """Count global Galaxy publications, without any regional tag filter.
+
+    Scope and tags: https://galaxyproject.org/publication-library/
+    Top-level bibliographic records exclude child items and standalone notes,
+    attachments and annotations. Total-Results counts all matches, not one page.
+    """
+    request = urllib.request.Request(ZOTERO_URL, headers={"Zotero-API-Version": "3"})
+    with urllib.request.urlopen(request, timeout=60) as response:
+        total = response.headers.get("Total-Results")
+    if total is None or re.fullmatch(r"[0-9]+", total) is None:
+        raise RuntimeError("Invalid or missing Zotero Total-Results header")
+    if int(total) == 0:
+        raise RuntimeError("Zotero returned no publications")
+    return {"publications": int(total)}
 
 
 def compact_grafana_result(result: dict, value_limit: int) -> dict:
@@ -182,6 +207,55 @@ def parse_gtn_html(text: str) -> dict[str, int]:
     return {"tutorials": int(match.group(1).replace(",", ""))}
 
 
+def count_reference_genomes(genomes: list, all_fasta: dict) -> int:
+    """Count registered assembly dbkeys backed by all_fasta, once per dbkey.
+
+    This is an identifier count: aliases are not merged without evidence, and
+    tool indexes, FASTA variants and repeated rows do not add assemblies.
+    """
+    placeholders = {"", "?", "draft"}
+
+    def valid_key(value):
+        if not isinstance(value, str):
+            raise ValueError("genome IDs must be strings")
+        return value.strip()
+
+    try:
+        if not isinstance(genomes, list) or not isinstance(all_fasta, dict):
+            raise ValueError("unexpected inventory response")
+        registered = set()
+        for row in genomes:
+            if not isinstance(row, list) or len(row) != 2:
+                raise ValueError("expected genome label/ID pairs")
+            registered.add(valid_key(row[1]))
+        columns = all_fasta["columns"]
+        rows = all_fasta["fields"]
+        if not isinstance(columns, list) or not isinstance(rows, list):
+            raise ValueError("expected data-table columns and fields")
+        dbkey_index = columns.index("dbkey")
+        installed = set()
+        for row in rows:
+            if not isinstance(row, list) or len(row) != len(columns):
+                raise ValueError("data-table row does not match columns")
+            installed.add(valid_key(row[dbkey_index]))
+    except (KeyError, TypeError, ValueError) as error:
+        raise RuntimeError(f"Invalid reference genome inventory: {error}") from error
+
+    registered -= placeholders
+    installed -= placeholders
+    confirmed = registered & installed
+    if not confirmed:
+        raise RuntimeError("No reference genomes confirmed by both genomes and all_fasta")
+    if registered != installed:
+        print(
+            f"warning: reference genome cross-check: {len(confirmed)} shared dbkeys; "
+            f"{len(registered - installed)} genomes-only, "
+            f"{len(installed - registered)} all_fasta-only; counting shared dbkeys only",
+            file=sys.stderr,
+        )
+    return len(confirmed)
+
+
 def format_number(value: int, step: int = 1, *, unit: str = "", plus: bool = False) -> str:
     """Format a count, rounding down for '+' so the displayed minimum is accurate."""
     if plus:
@@ -224,10 +298,10 @@ def collect_values(
     save_fixtures: bool = False,
     fixture_value_limit: int = DEFAULT_FIXTURE_VALUE_LIMIT,
 ) -> dict[str, str]:
-    """Load the four stats sources, optionally save fixtures, then format the counts."""
+    """Load stats sources, optionally save fixtures, then format the counts."""
     if fixture_dir and not save_fixtures:
         source_data = {}
-        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats"):
+        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "zotero_stats"):
             source_data[name] = json.loads((fixture_dir / f"{name}.json").read_text())
     else:
         now_ms = int(time.time() * 1000)
@@ -238,6 +312,9 @@ def collect_values(
             "grafana_current": grafana_query(current_queries(), six_hours_ago_ms, now_ms),
             "tiaas_stats": parse_tiaas_html(fetch(TIAAS_URL).decode("utf-8", errors="replace")),
             "gtn_stats": parse_gtn_html(fetch(GTN_URL).decode("utf-8", errors="replace")),
+            "genomes": json.loads(fetch(GENOMES_URL)),
+            "all_fasta": json.loads(fetch(ALL_FASTA_URL)),
+            "zotero_stats": fetch_zotero_stats(),
         }
 
     if fixture_dir and save_fixtures:
@@ -253,6 +330,8 @@ def collect_values(
     gtn = source_data["gtn_stats"]
 
     values = {
+        "n_pubs_global": format_number(source_data["zotero_stats"]["publications"], unit="K", plus=True),
+        "n_reference_genomes": format_number(count_reference_genomes(source_data["genomes"], source_data["all_fasta"])),
         "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
         "n_registered_users": format_number(last_number(snapshots, "registered_users"), 10_000, plus=True),
         "n_tiaas_trainees": format_number(tiaas["trainees"], unit="K", plus=True),
@@ -264,12 +343,12 @@ def collect_values(
         "n_jobs_run": format_number(last_number(snapshots, "jobs"), unit="M"),
         "n_tools_installed": format_number(count_values(current, "tools"), 100),
     }
-    # Grafana fills gaps in this series with zero. Keep the existing SVG value
-    # when the queried period has no real count, rather than publishing zero.
+    # Grafana fills gaps in this series with zero. Leave the template placeholder
+    # visible when the queried period has no real count.
     try:
         elixir_users = last_number(current, "elixir_users", ignore_zero=True)
     except RuntimeError as error:
-        print(f"warning: {error}; leaving ELIXIR AAI users unchanged", file=sys.stderr)
+        print(f"warning: {error}; leaving ELIXIR AAI users unchanged (placeholder remains in template-based output)", file=sys.stderr)
     else:
         values["n_elixir_users"] = format_number(elixir_users, 100, plus=True)
     return values
@@ -282,7 +361,7 @@ def main() -> int:
     parser.add_argument(
         "--output",
         type=Path,
-        help="Write the updated SVG to this path instead of overwriting the input SVG.",
+        help="Output path (default: <input stem>_rendered.svg beside the template). Must differ from the input.",
     )
     parser.add_argument(
         "--fixture-dir",
@@ -309,6 +388,9 @@ def main() -> int:
     args = parser.parse_args()
     if args.save_fixtures and args.use_fixtures:
         parser.error("--save-fixtures and --use-fixtures cannot be combined")
+    output = args.output or args.svg.with_name(f"{args.svg.stem}_rendered{args.svg.suffix}")
+    if output.resolve() == args.svg.resolve() or (output.exists() and output.samefile(args.svg)):
+        parser.error("output must differ from the input SVG template")
 
     fixture_dir = args.fixture_dir if args.save_fixtures or args.use_fixtures else None
     values = collect_values(
@@ -321,12 +403,11 @@ def main() -> int:
         svg = replace_text(svg, TEXT_IDS[key], value)
 
     if not args.dry_run:
-        output = args.output or args.svg
         output.write_text(svg)
     for key in sorted(values):
         print(f"{key}: {values[key]}")
-    if not args.dry_run and args.output:
-        print(f"wrote: {args.output}")
+    if not args.dry_run:
+        print(f"wrote: {output}")
     return 0
 
 

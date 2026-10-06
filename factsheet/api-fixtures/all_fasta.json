@@ -1,0 +1,60 @@
+{
+  "name": "all_fasta",
+  "model_class": "TabularToolDataTable",
+  "columns": [
+    "value",
+    "dbkey",
+    "name",
+    "path"
+  ],
+  "fields": [
+    [
+      "hg38",
+      "hg38",
+      "Human (GRCh38/hg38)",
+      "hg38.fa"
+    ],
+    [
+      "hg38full",
+      "hg38",
+      "Human (GRCh38/hg38) Full",
+      "hg38.fa"
+    ],
+    [
+      "hg19",
+      "hg19",
+      "Human (GRCh37/hg19)",
+      "hg19.fa"
+    ],
+    [
+      "hg19",
+      "hg19",
+      "Human (GRCh37/hg19)",
+      "hg19.fa"
+    ],
+    [
+      "dm6",
+      "dm6",
+      "D. melanogaster (dm6)",
+      "dm6.fa"
+    ],
+    [
+      "?",
+      "?",
+      "Unspecified",
+      "unknown.fa"
+    ],
+    [
+      "draft",
+      "draft",
+      "Draft",
+      "draft.fa"
+    ],
+    [
+      "",
+      "",
+      "Unspecified",
+      "unknown.fa"
+    ]
+  ]
+}

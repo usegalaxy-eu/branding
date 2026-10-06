@@ -1,4 +1,5 @@
 import importlib.util
+import json
 import math
 import os
 import tempfile
@@ -26,6 +27,19 @@ def require_live_tests():
 class UpdateFactsheetLiveIntegrationTests(unittest.TestCase):
     def setUp(self):
         require_live_tests()
+
+    def test_live_zotero_returns_global_publication_total(self):
+        stats = update_factsheet.fetch_zotero_stats()
+        self.assertIsInstance(stats["publications"], int)
+        self.assertGreater(stats["publications"], 0)
+
+    def test_live_reference_genomes_cross_check(self):
+        genomes = json.loads(update_factsheet.fetch(update_factsheet.GENOMES_URL))
+        fasta = json.loads(update_factsheet.fetch(update_factsheet.ALL_FASTA_URL))
+        count = update_factsheet.count_reference_genomes(genomes, fasta)
+        self.assertGreater(count, 0)
+        self.assertLessEqual(count, len(genomes))
+        self.assertLessEqual(count, len(fasta["fields"]))
 
     def test_live_grafana_current_queries_return_expected_shapes(self):
         now_ms = int(update_factsheet.time.time() * 1000)

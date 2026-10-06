@@ -1,0 +1,30 @@
+[
+  [
+    "Human (GRCh38/hg38)",
+    "hg38"
+  ],
+  [
+    "Human (GRCh37/hg19)",
+    "hg19"
+  ],
+  [
+    "Human (GRCh38/hg38) duplicate",
+    "hg38"
+  ],
+  [
+    "Mouse (GRCm38/mm10)",
+    "mm10"
+  ],
+  [
+    "unspecified (?)",
+    "?"
+  ],
+  [
+    "Draft",
+    "draft"
+  ],
+  [
+    "Unspecified",
+    ""
+  ]
+]
