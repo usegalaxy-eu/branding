@@ -4,7 +4,7 @@ import subprocess
 import sys
 import tempfile
 import unittest
-from unittest.mock import MagicMock, patch
+from unittest.mock import patch
 import xml.etree.ElementTree as ET
 from pathlib import Path
 
@@ -28,31 +28,27 @@ def text_by_id(svg_path, text_id):
 
 
 class UpdateFactsheetSmokeTests(unittest.TestCase):
-    def test_zotero_uses_total_header_and_global_bibliographic_query(self):
-        response = MagicMock()
-        response.__enter__.return_value.headers = {"Total-Results": "23999"}
-        with patch.object(update_factsheet.urllib.request, "urlopen", return_value=response) as urlopen:
-            self.assertEqual(update_factsheet.fetch_zotero_stats(), {"publications": 23999})
-        request = urlopen.call_args.args[0]
-        from urllib.parse import urlparse, parse_qs
-        url = urlparse(request.full_url)
-        self.assertEqual(url.netloc, "api.zotero.org")
-        self.assertEqual(url.path, "/groups/1732893/items/top")
-        query = parse_qs(url.query)
-        self.assertEqual(query["limit"], ["1"])
-        self.assertEqual(query["itemType"], ["-attachment || note || annotation"])
-        self.assertNotIn("tag", query)
-        self.assertEqual(request.get_header("Zotero-api-version"), "3")
-        self.assertEqual(update_factsheet.format_number(23999, unit="K", plus=True), "23K+")
-
-    def test_zotero_rejects_missing_invalid_or_empty_total(self):
-        for total in (None, "", "0", "-1", "1.5", "unknown"):
+    def test_scholar_reads_all_time_citations_from_summary_table(self):
+        for total in ("24794", "24,794"):
             with self.subTest(total=total):
-                response = MagicMock()
-                response.__enter__.return_value.headers = {"Total-Results": total}
-                with patch.object(update_factsheet.urllib.request, "urlopen", return_value=response):
-                    with self.assertRaisesRegex(RuntimeError, "Zotero"):
-                        update_factsheet.fetch_zotero_stats()
+                page = (
+                    '<table><tr><td>Citations</td><td>999</td></tr></table>'
+                    '<table id="gsc_rsb_st"><tbody>'
+                    '<tr><td>h-index</td><td>34</td><td>27</td></tr>'
+                    f'<tr><td><a>Citations</a></td><td>{total}</td><td>11434</td></tr>'
+                    '</tbody></table><td class="gsc_rsb_std">123</td>'
+                )
+                self.assertEqual(update_factsheet.parse_scholar_html(page), {"citations": 24794})
+
+    def test_scholar_rejects_missing_invalid_or_empty_total(self):
+        pages = ["<html>unusual traffic CAPTCHA</html>", "<table><td>24794</td></table>",
+                 '<table id="gsc_rsb_st"><tr><td>h-index</td><td>34</td></tr></table>']
+        pages += [f'<table id="gsc_rsb_st"><tr><td>Citations</td><td>{total}</td>'
+                  '<td>11434</td></tr></table>'
+                  for total in ("", "0", "-1", "1.5", "24,79", "unknown")]
+        for page in pages:
+            with self.subTest(page=page), self.assertRaisesRegex(RuntimeError, "Google Scholar"):
+                update_factsheet.parse_scholar_html(page)
 
     def test_reference_genomes_deduplicate_and_cross_check_by_named_column(self):
         genomes = [["Human", "hg38"], ["Human alias", "hg38"],
@@ -302,7 +298,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             update_factsheet.collect_values(fixture_dir=FIXTURE_DIR),
             {
                 "n_GTN_tutorials": "500+",
-                "n_pubs_global": "13K+",
+                "n_pubs_global": "24K+",
                 "n_reference_genomes": "2",
                 "n_datasets": "215M",
                 "n_elixir_users": "300+",
@@ -389,7 +385,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
     def test_save_fixtures_round_trips_live_values_without_network(self):
         sources = {
             name: json.loads((FIXTURE_DIR / f"{name}.json").read_text())
-            for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "zotero_stats")
+            for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats")
         }
         tiaas_html = b"Overall 615 Events since 2018 Overall 24,048 Students taught"
         gtn_html = b'<div class="card-title">527</div><div class="card-text">Tutorials</div>'
@@ -402,12 +398,12 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 gtn_html,
                 json.dumps(sources["genomes"]).encode(),
                 json.dumps(sources["all_fasta"]).encode(),
-            ]) as fetch, patch.object(
-                update_factsheet, "fetch_zotero_stats", return_value=sources["zotero_stats"]
-            ) as zotero:
+                (f'<table id="gsc_rsb_st"><tr><td>Citations</td>'
+                 f'<td>{sources["scholar_stats"]["citations"]}</td><td>11434</td></tr></table>').encode(),
+            ]) as fetch:
                 values = update_factsheet.collect_values(fixture_dir=fixture_dir, save_fixtures=True)
-                self.assertEqual(fetch.call_count, 6)
-                zotero.assert_called_once_with()
+                self.assertEqual(fetch.call_count, 7)
+                self.assertEqual(fetch.call_args.args[0], update_factsheet.SCHOLAR_URL)
             self.assertEqual(update_factsheet.collect_values(fixture_dir=fixture_dir), values)
             for name, expected in sources.items():
                 self.assertEqual(json.loads((fixture_dir / f"{name}.json").read_text()), expected)

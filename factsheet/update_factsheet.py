@@ -22,10 +22,7 @@ TIAAS_URL = "https://usegalaxy.eu/tiaas/stats/"
 GTN_URL = "https://training.galaxyproject.org/training-material/stats/#gtn-statistics"
 GENOMES_URL = "https://usegalaxy.eu/api/genomes"
 ALL_FASTA_URL = "https://usegalaxy.eu/api/tool_data/all_fasta"
-ZOTERO_URL = (
-    "https://api.zotero.org/groups/1732893/items/top"
-    "?format=json&limit=1&itemType=-attachment%20%7C%7C%20note%20%7C%7C%20annotation"
-)
+SCHOLAR_URL = "https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ"
 DEFAULT_FIXTURE_DIR = Path("factsheet/api-fixtures")
 DEFAULT_FIXTURE_VALUE_LIMIT = 10
 
@@ -63,21 +60,24 @@ def grafana_query(queries: list[dict], from_ms: int, to_ms: int) -> dict:
     return json.loads(data)
 
 
-def fetch_zotero_stats() -> dict[str, int]:
-    """Count global Galaxy publications, without any regional tag filter.
+def parse_scholar_html(text: str) -> dict[str, int]:
+    """Read the all-time citations total, not recent citations or article counts.
 
-    Scope and tags: https://galaxyproject.org/publication-library/
-    Top-level bibliographic records exclude child items and standalone notes,
-    attachments and annotations. Total-Results counts all matches, not one page.
+    The profile is requested in English to identify the Citations row. Fail on
+    challenge pages or changed markup rather than displaying a misleading count.
     """
-    request = urllib.request.Request(ZOTERO_URL, headers={"Zotero-API-Version": "3"})
-    with urllib.request.urlopen(request, timeout=60) as response:
-        total = response.headers.get("Total-Results")
-    if total is None or re.fullmatch(r"[0-9]+", total) is None:
-        raise RuntimeError("Invalid or missing Zotero Total-Results header")
-    if int(total) == 0:
-        raise RuntimeError("Zotero returned no publications")
-    return {"publications": int(total)}
+    table = re.search(r'<table\b[^>]*\bid=["\']gsc_rsb_st["\'][^>]*>(.*?)</table>', text, re.S)
+    if table:
+        for row in re.findall(r"<tr\b[^>]*>(.*?)</tr>", table.group(1), re.S):
+            cells = re.findall(r"<td\b[^>]*>(.*?)</td>", row, re.S)
+            plain = [html.unescape(re.sub(r"<[^>]+>", "", cell)).strip() for cell in cells]
+            if len(plain) >= 2 and plain[0] == "Citations":
+                total = plain[1]
+                if re.fullmatch(r"(?:[0-9]+|[0-9]{1,3}(?:,[0-9]{3})+)", total):
+                    count = int(total.replace(",", ""))
+                    if count > 0:
+                        return {"citations": count}
+    raise RuntimeError("Could not parse Google Scholar all-time citations total (page may be blocked or changed)")
 
 
 def compact_grafana_result(result: dict, value_limit: int) -> dict:
@@ -307,7 +307,7 @@ def collect_values(
     """Load stats sources, optionally save fixtures, then format the counts."""
     if fixture_dir and not save_fixtures:
         source_data = {}
-        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "zotero_stats"):
+        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats"):
             source_data[name] = json.loads((fixture_dir / f"{name}.json").read_text())
     else:
         now_ms = int(time.time() * 1000)
@@ -320,7 +320,7 @@ def collect_values(
             "gtn_stats": parse_gtn_html(fetch(GTN_URL).decode("utf-8", errors="replace")),
             "genomes": json.loads(fetch(GENOMES_URL)),
             "all_fasta": json.loads(fetch(ALL_FASTA_URL)),
-            "zotero_stats": fetch_zotero_stats(),
+            "scholar_stats": parse_scholar_html(fetch(SCHOLAR_URL).decode("utf-8", errors="replace")),
         }
 
     if fixture_dir and save_fixtures:
@@ -336,7 +336,7 @@ def collect_values(
     gtn = source_data["gtn_stats"]
 
     values = {
-        "n_pubs_global": format_number(source_data["zotero_stats"]["publications"], unit="K", plus=True),
+        "n_pubs_global": format_number(source_data["scholar_stats"]["citations"], unit="K", plus=True),
         "n_reference_genomes": format_number(count_reference_genomes(source_data["genomes"], source_data["all_fasta"])),
         "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
         "n_registered_users": format_number(last_number(snapshots, "registered_users"), 10_000, plus=True),

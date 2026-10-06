@@ -43,11 +43,11 @@ The script populates the SVG text values for metrics that are available through 
 - TIaaS events and trainees
 - GTN tutorials
 - reference genomes
-- global Galaxy publications
+- global Galaxy citations
 
 Countries and Pulsar partners are manually maintained. Their numeric values remain in the template and are copied unchanged into output. Their SVG text elements have `data-source="manual"`, and their Inkscape text or layer labels begin with `manual_` so editors can identify them. Review and edit these figures directly in the template before generating output.
 
-Global publications come from the [Galaxy Zotero library](https://www.zotero.org/groups/1732893/galaxy), which collects publications using, extending, or referencing Galaxy. The updater reads the API’s `Total-Results` header for top-level records, excluding attachments, notes, annotations, and trashed items, and displays a rounded-down `K+` count. No regional tag filter is applied: an EU-only count would require filtering. The [library documentation](https://galaxyproject.org/publication-library/) explains its scope and tags. Missing, invalid, or zero totals stop the update. The parsed total is saved in `zotero_stats.json`.
+Global citations come from the [Galaxy Project Google Scholar profile](https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ), as recommended in [the PR discussion](https://github.com/usegalaxy-eu/branding/pull/37#issuecomment-6016429256). The updater reads the **all-time Citations** total, not the recent-period count, h-index, or number of profile articles, and displays a rounded-down `K+` count.
 
 Reference genomes are counted as distinct genome IDs from [the genomes API](https://usegalaxy.eu/api/genomes) that also occur in the `dbkey` column of [the all_fasta table](https://usegalaxy.eu/api/tool_data/all_fasta). Duplicate rows and tool/reference variants sharing a dbkey count once; empty, `?`, and `draft` keys are excluded. This conservative identifier count does not merge undocumented aliases. IDs present in only one source are excluded and their counts are reported in a warning. Empty, malformed, or non-overlapping inventories stop the update rather than produce a misleading zero. The checked-in inventory fixtures are small representative samples (two shared genome IDs), covering duplicate rows, shared dbkeys, placeholders, and IDs unique to either source. Offline output reflects this sample, not the live inventory. `--save-fixtures` saves both live inventory responses in full. Interface documentation: [genomes](https://docs.galaxyproject.org/en/latest/_modules/galaxy/webapps/galaxy/api/genomes.html) and [data tables](https://docs.galaxyproject.org/en/release_26.1/_modules/galaxy/webapps/galaxy/api/tool_data.html).
 
@@ -79,7 +79,7 @@ This writes fixtures to `factsheet/api-fixtures/`:
 - `gtn_stats.json`
 - `genomes.json`
 - `all_fasta.json`
-- `zotero_stats.json`
+- `scholar_stats.json`
 
 To test locally without querying any API endpoint:
 
@@ -107,7 +107,7 @@ RUN_LIVE_API_TESTS=1 python3 -m unittest tests/test_update_factsheet_live.py
 
 The updater queries:
 
-- `https://api.zotero.org/groups/1732893/items/top`
+- `https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ`
 - `https://stats.galaxyproject.eu/`
 - `https://usegalaxy.eu/tiaas/stats/`
 - `https://training.galaxyproject.org/training-material/stats/#gtn-statistics`

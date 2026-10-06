@@ -28,10 +28,12 @@ class UpdateFactsheetLiveIntegrationTests(unittest.TestCase):
     def setUp(self):
         require_live_tests()
 
-    def test_live_zotero_returns_global_publication_total(self):
-        stats = update_factsheet.fetch_zotero_stats()
-        self.assertIsInstance(stats["publications"], int)
-        self.assertGreater(stats["publications"], 0)
+    def test_live_scholar_returns_all_time_citation_total(self):
+        stats = update_factsheet.parse_scholar_html(
+            update_factsheet.fetch(update_factsheet.SCHOLAR_URL).decode("utf-8", errors="replace")
+        )
+        self.assertIsInstance(stats["citations"], int)
+        self.assertGreater(stats["citations"], 0)
 
     def test_live_reference_genomes_cross_check(self):
         genomes = json.loads(update_factsheet.fetch(update_factsheet.GENOMES_URL))
