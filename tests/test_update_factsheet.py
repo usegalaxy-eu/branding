@@ -1,3 +1,4 @@
+import datetime
 import importlib.util
 import json
 import subprocess
@@ -28,6 +29,42 @@ def text_by_id(svg_path, text_id):
 
 
 class UpdateFactsheetSmokeTests(unittest.TestCase):
+    def test_pulsar_counts_unique_remote_runners_only(self):
+        source = '''destinations:
+  pulsar_default:
+    abstract: true
+    runner: pulsar_embedded
+  embedded_pulsar_docker:
+    runner: pulsar_embedded
+  pulsar_local:
+    runner: pulsar_embedded
+  pulsar_cz01_tpv:
+    runner: pulsar_eu_cz01
+  pulsar_cz02_tpv:
+    runner: pulsar_eu_cz01 # GPU queue at the same endpoint
+  pulsar_fr01_tpv:
+    runner: "pulsar_eu_fr01"
+#  pulsar_nemo_tpv:
+#    runner: pulsar_eu_nemo
+'''
+        self.assertEqual(update_factsheet.count_pulsar_runners(source), 2)
+
+    def test_pulsar_rejects_missing_or_changed_inventory(self):
+        for source in ("<html>Unavailable</html>", "destinations:\n",
+                       "destinations:\n  pulsar_example:\n    inherits: pulsar_default\n",
+                       "destinations:\n  pulsar_example:\n    runner: {{ unknown }}\n"):
+            with self.subTest(source=source), self.assertRaises(RuntimeError):
+                update_factsheet.count_pulsar_runners(source)
+
+    def test_pulsar_fixture_is_readable_mapping_and_deduplicates_runners(self):
+        inventory = json.loads((FIXTURE_DIR / "pulsar_destinations.json").read_text())
+        self.assertEqual(len(inventory), 17)
+        self.assertEqual(inventory["pulsar_cz01_tpv"], inventory["pulsar_cz02_tpv"])
+        self.assertEqual(update_factsheet.count_pulsar_inventory(inventory), 16)
+        for invalid in ("escaped source", {}, {"pulsar_example": None}):
+            with self.subTest(invalid=invalid), self.assertRaises(RuntimeError):
+                update_factsheet.count_pulsar_inventory(invalid)
+
     def test_scholar_reads_all_time_citations_from_summary_table(self):
         for total in ("24794", "24,794"):
             with self.subTest(total=total):
@@ -95,7 +132,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 [sys.executable, str(MODULE_PATH), "--use-fixtures", str(template)],
                 cwd=ROOT, check=True, capture_output=True, text=True,
             )
-            output = template.with_name("factsheet_rendered.svg")
+            output = template.with_name(f"factsheet_rendered_{datetime.date.today():%d.%m.%Y}.svg")
             self.assertEqual(template.read_bytes(), before)
             self.assertIn(f"wrote: {output}", result.stdout)
             self.assertNotIn("{{", output.read_text())
@@ -105,11 +142,11 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 element for element in ET.parse(template).getroot().iter()
                 if element.attrib.get("data-source") == "manual"
             ]
-            self.assertEqual(len(manual_elements), 2)
+            self.assertEqual(len(manual_elements), 1)
             for element in manual_elements:
                 text_id = element.attrib["id"]
                 self.assertEqual(text_by_id(output, text_id), text_by_id(template, text_id))
-            self.assertEqual(output.read_text().count('data-source="manual"'), 2)
+            self.assertEqual(output.read_text().count('data-source="manual"'), 1)
 
     def test_cli_rejects_output_that_aliases_template(self):
         with tempfile.TemporaryDirectory() as tmpdir:
@@ -299,6 +336,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
             {
                 "n_GTN_tutorials": "500+",
                 "n_pubs_global": "24K+",
+                "n_pulsar_nodes": "16",
                 "n_reference_genomes": "2",
                 "n_datasets": "215M",
                 "n_elixir_users": "300+",
@@ -385,7 +423,7 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
     def test_save_fixtures_round_trips_live_values_without_network(self):
         sources = {
             name: json.loads((FIXTURE_DIR / f"{name}.json").read_text())
-            for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats")
+            for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats", "pulsar_destinations")
         }
         tiaas_html = b"Overall 615 Events since 2018 Overall 24,048 Students taught"
         gtn_html = b'<div class="card-title">527</div><div class="card-text">Tutorials</div>'
@@ -400,10 +438,14 @@ class UpdateFactsheetSmokeTests(unittest.TestCase):
                 json.dumps(sources["all_fasta"]).encode(),
                 (f'<table id="gsc_rsb_st"><tr><td>Citations</td>'
                  f'<td>{sources["scholar_stats"]["citations"]}</td><td>11434</td></tr></table>').encode(),
+                ("destinations:\n" + "".join(
+                    f"  {name}:\n    runner: {runner}\n"
+                    for name, runner in sources["pulsar_destinations"].items()
+                )).encode(),
             ]) as fetch:
                 values = update_factsheet.collect_values(fixture_dir=fixture_dir, save_fixtures=True)
-                self.assertEqual(fetch.call_count, 7)
-                self.assertEqual(fetch.call_args.args[0], update_factsheet.SCHOLAR_URL)
+                self.assertEqual(fetch.call_count, 8)
+                self.assertEqual(fetch.call_args.args[0], update_factsheet.PULSAR_URL)
             self.assertEqual(update_factsheet.collect_values(fixture_dir=fixture_dir), values)
             for name, expected in sources.items():
                 self.assertEqual(json.loads((fixture_dir / f"{name}.json").read_text()), expected)

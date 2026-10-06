@@ -44,8 +44,11 @@ The script populates the SVG text values for metrics that are available through 
 - GTN tutorials
 - reference genomes
 - global Galaxy citations
+- configured remote Pulsar runners
 
-Countries and Pulsar partners are manually maintained. Their numeric values remain in the template and are copied unchanged into output. Their SVG text elements have `data-source="manual"`, and their Inkscape text or layer labels begin with `manual_` so editors can identify them. Review and edit these figures directly in the template before generating output.
+The country count is manually maintained. Its numeric value remains in the template and is copied unchanged into output. Its SVG text element has `data-source="manual"`, and its Inkscape label begins with `manual_`. Review and edit this figure directly in the template before generating output.
+
+The Pulsar figure counts distinct remote runner IDs in the [Galaxy Europe destination configuration](https://github.com/usegalaxy-eu/infrastructure-playbook/blob/master/files/galaxy/tpv/destinations.yml.j2), fetched from its raw GitHub URL. Abstract templates, embedded Pulsar runners and commented-out destinations are excluded; multiple destinations sharing a runner count once.
 
 Global citations come from the [Galaxy Project Google Scholar profile](https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ). There is no public API for this, so the updater scrapes the citation count from the HTML page. The script uses a simple regex to find the number of citations in the HTML.
 
@@ -80,6 +83,7 @@ This writes fixtures to `factsheet/api-fixtures/`:
 - `genomes.json`
 - `all_fasta.json`
 - `scholar_stats.json`
+- `pulsar_destinations.json`
 
 To test locally without querying any API endpoint:
 
@@ -106,6 +110,8 @@ RUN_LIVE_API_TESTS=1 python3 -m unittest tests/test_update_factsheet_live.py
 ```
 
 The updater queries:
+
+- `https://raw.githubusercontent.com/usegalaxy-eu/infrastructure-playbook/master/files/galaxy/tpv/destinations.yml.j2`
 
 - `https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ`
 - `https://stats.galaxyproject.eu/`

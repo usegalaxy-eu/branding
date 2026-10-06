@@ -1,0 +1,19 @@
+{
+  "pulsar_be_tpv": "pulsar_eu_be01",
+  "pulsar_bsc01_tpv": "pulsar_eu_bsc01",
+  "pulsar_cyf01_tpv": "pulsar_eu_cyf01",
+  "pulsar_cz01_tpv": "pulsar_eu_cz01",
+  "pulsar_cz02_tpv": "pulsar_eu_cz01",
+  "pulsar_egi01_tpv": "pulsar_eu_egi01",
+  "pulsar_eosc01_tpv": "pulsar_eu_eosc01",
+  "pulsar_fr01_tpv": "pulsar_eu_fr01",
+  "pulsar_hcmr01_tpv": "pulsar_eu_hcmr01",
+  "pulsar_it02_tpv": "pulsar_eu_it02",
+  "pulsar_it03_tpv": "pulsar_eu_it03",
+  "pulsar_it_tpv": "pulsar_eu_it01",
+  "pulsar_mira_tpv": "pulsar_mira_runner",
+  "pulsar_sk01_tpv": "pulsar_eu_sk01",
+  "pulsar_tubitak01_tpv": "pulsar_eu_tubitak01",
+  "pulsar_uca01_tpv": "pulsar_eu_uca01",
+  "pulsar_ufz_eve01_tpv": "pulsar_eu_ufz_eve01"
+}

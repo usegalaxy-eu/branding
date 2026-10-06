@@ -28,6 +28,10 @@ class UpdateFactsheetLiveIntegrationTests(unittest.TestCase):
     def setUp(self):
         require_live_tests()
 
+    def test_live_pulsar_configuration_has_remote_runners(self):
+        source = update_factsheet.fetch(update_factsheet.PULSAR_URL).decode("utf-8")
+        self.assertGreater(update_factsheet.count_pulsar_runners(source), 0)
+
     def test_live_scholar_returns_all_time_citation_total(self):
         stats = update_factsheet.parse_scholar_html(
             update_factsheet.fetch(update_factsheet.SCHOLAR_URL).decode("utf-8", errors="replace")

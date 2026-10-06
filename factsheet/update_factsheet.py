@@ -25,6 +25,7 @@ GTN_URL = "https://training.galaxyproject.org/training-material/stats/#gtn-stati
 GENOMES_URL = "https://usegalaxy.eu/api/genomes"
 ALL_FASTA_URL = "https://usegalaxy.eu/api/tool_data/all_fasta"
 SCHOLAR_URL = "https://scholar.google.de/citations?hl=en&user=3tSiRGoAAAAJ"
+PULSAR_URL = "https://raw.githubusercontent.com/usegalaxy-eu/infrastructure-playbook/master/files/galaxy/tpv/destinations.yml.j2"
 DEFAULT_FIXTURE_DIR = Path("factsheet/api-fixtures")
 DEFAULT_FIXTURE_VALUE_LIMIT = 10
 
@@ -51,6 +52,7 @@ def write_png(svg_path: Path, png_path: Path) -> None:
 DEFAULT_FIXTURE_VALUE_LIMIT = 10
 
 TEXT_IDS = {
+    "n_pulsar_nodes": "text1422",
     "n_pubs_global": "text414",
     "n_reference_genomes": "text1418-4",
     "n_elixir_users": "text1360-7",
@@ -102,6 +104,52 @@ def parse_scholar_html(text: str) -> dict[str, int]:
                     if count > 0:
                         return {"citations": count}
     raise RuntimeError("Could not parse Google Scholar all-time citations total (page may be blocked or changed)")
+
+
+def parse_pulsar_destinations(text: str) -> dict[str, str]:
+    """Extract remote destination-to-runner mappings without evaluating Jinja.
+
+    Read only destination names and direct scalar fields at their expected
+    indentation. Shared templates, embedded runners and comments do not count.
+    This measures configured runners, not institutions or live availability.
+    """
+    section = re.search(r"^destinations:\s*\n", text, re.M)
+    if not section:
+        raise RuntimeError("Invalid Pulsar inventory: missing destinations mapping")
+    entries = re.split(r"^  ([A-Za-z0-9_]+):[^\n]*\n", text[section.end():], flags=re.M)
+    destinations = {}
+    for name, body in zip(entries[1::2], entries[2::2]):
+        if not name.startswith("pulsar_"):
+            continue
+        if re.search(r"^    abstract: true\s*(?:#.*)?$", body, re.M):
+            continue
+        fields = re.findall(r"^    runner:[ \t]*([^\n]+)", body, re.M)
+        if len(fields) != 1:
+            raise RuntimeError(f"Invalid Pulsar inventory: expected one runner for {name}")
+        runner = fields[0].split("#", 1)[0].strip().strip("\"'")
+        if not re.fullmatch(r"pulsar_[A-Za-z0-9_]+", runner):
+            raise RuntimeError(f"Invalid Pulsar inventory: unsupported runner for {name}")
+        if runner != "pulsar_embedded":
+            destinations[name] = runner
+    if not destinations:
+        raise RuntimeError("No remote Pulsar runners found in destination configuration")
+    return destinations
+
+
+def count_pulsar_runners(text: str) -> int:
+    return len(set(parse_pulsar_destinations(text).values()))
+
+
+def count_pulsar_inventory(destinations: dict[str, str]) -> int:
+    if not isinstance(destinations, dict) or not destinations or any(
+        not isinstance(name, str) or not name.startswith("pulsar_")
+        or not isinstance(runner, str)
+        or not re.fullmatch(r"pulsar_[A-Za-z0-9_]+", runner)
+        or runner == "pulsar_embedded"
+        for name, runner in destinations.items()
+    ):
+        raise RuntimeError("Invalid Pulsar destination inventory")
+    return len(set(destinations.values()))
 
 
 def compact_grafana_result(result: dict, value_limit: int) -> dict:
@@ -331,7 +379,7 @@ def collect_values(
     """Load stats sources, optionally save fixtures, then format the counts."""
     if fixture_dir and not save_fixtures:
         source_data = {}
-        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats"):
+        for name in ("grafana_snapshots", "grafana_current", "tiaas_stats", "gtn_stats", "genomes", "all_fasta", "scholar_stats", "pulsar_destinations"):
             source_data[name] = json.loads((fixture_dir / f"{name}.json").read_text())
     else:
         now_ms = int(time.time() * 1000)
@@ -345,6 +393,7 @@ def collect_values(
             "genomes": json.loads(fetch(GENOMES_URL)),
             "all_fasta": json.loads(fetch(ALL_FASTA_URL)),
             "scholar_stats": parse_scholar_html(fetch(SCHOLAR_URL).decode("utf-8", errors="replace")),
+            "pulsar_destinations": parse_pulsar_destinations(fetch(PULSAR_URL).decode("utf-8")),
         }
 
     if fixture_dir and save_fixtures:
@@ -360,6 +409,7 @@ def collect_values(
     gtn = source_data["gtn_stats"]
 
     values = {
+        "n_pulsar_nodes": format_number(count_pulsar_inventory(source_data["pulsar_destinations"])),
         "n_pubs_global": format_number(source_data["scholar_stats"]["citations"], unit="K", plus=True),
         "n_reference_genomes": format_number(count_reference_genomes(source_data["genomes"], source_data["all_fasta"])),
         "n_monthly_users": format_number(last_number(current, "monthly_users"), 100),
