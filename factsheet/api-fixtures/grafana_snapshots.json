@@ -1,0 +1,344 @@
+{
+  "results": {
+    "datasets": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1781827200000,
+                1781913600000,
+                1782000000000,
+                1782086400000,
+                1782172800000,
+                1782259200000,
+                1782345600000,
+                1782432000000,
+                1782518400000,
+                1782604800000
+              ],
+              [
+                213464260,
+                213617325,
+                213749616,
+                213933124,
+                214241341,
+                214395479,
+                214801974,
+                214934770,
+                214979657,
+                215052232
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "server-datasets.Count"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT sum(\"count\") AS \"Count\" FROM \"server-datasets\" WHERE time >= 1751229092714ms and time <= 1782765092714ms GROUP BY time(1d) fill(none)",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "server-datasets.Count",
+            "refId": "datasets"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "histories": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1781827200000,
+                1781913600000,
+                1782000000000,
+                1782086400000,
+                1782172800000,
+                1782259200000,
+                1782345600000,
+                1782432000000,
+                1782518400000,
+                1782604800000
+              ],
+              [
+                12987311,
+                13003414,
+                13024107,
+                13054096,
+                13087569,
+                13114032,
+                13138198,
+                13161497,
+                13186428,
+                13211669
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "server-histories.Count"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT sum(\"count\") AS \"Count\" FROM \"server-histories\" WHERE time >= 1751229092714ms and time <= 1782765092714ms GROUP BY time(1d) fill(none)",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "server-histories.Count",
+            "refId": "histories"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "jobs": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1781827200000,
+                1781913600000,
+                1782000000000,
+                1782086400000,
+                1782172800000,
+                1782259200000,
+                1782345600000,
+                1782432000000,
+                1782518400000,
+                1782604800000
+              ],
+              [
+                106315207,
+                106363354,
+                106426104,
+                106520285,
+                106606398,
+                106653044,
+                106777902,
+                106839583,
+                106867835,
+                106911907
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "server-jobs.Count"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT sum(\"count\") AS \"Count\" FROM \"server-jobs\" WHERE time >= 1751229092714ms and time <= 1782765092714ms GROUP BY time(1d) fill(none)",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "server-jobs.Count",
+            "refId": "jobs"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "registered_users": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1781827200000,
+                1781913600000,
+                1782000000000,
+                1782086400000,
+                1782172800000,
+                1782259200000,
+                1782345600000,
+                1782432000000,
+                1782518400000,
+                1782604800000
+              ],
+              [
+                172374,
+                172428,
+                172479,
+                172603,
+                172701,
+                172811,
+                172915,
+                173004,
+                173120,
+                173286
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "server-users.Count"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT sum(\"count\") AS \"Count\" FROM \"server-users\" WHERE time >= 1751229092714ms and time <= 1782765092714ms AND \"deleted\"='f' AND \"purged\"='f' AND \"external\"='f' GROUP BY time(1d) fill(none)",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "server-users.Count",
+            "refId": "registered_users"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "workflows": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1781827200000,
+                1781913600000,
+                1782000000000,
+                1782086400000,
+                1782172800000,
+                1782259200000,
+                1782345600000,
+                1782432000000,
+                1782518400000,
+                1782604800000
+              ],
+              [
+                748188,
+                748770,
+                749122,
+                749808,
+                750323,
+                750699,
+                751283,
+                751608,
+                751725,
+                751882
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "server-workflow-invocations.Count"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT sum(\"count\") AS \"Count\" FROM \"server-workflow-invocations\" WHERE time >= 1751229092714ms and time <= 1782765092714ms GROUP BY time(1d) fill(none)",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "server-workflow-invocations.Count",
+            "refId": "workflows"
+          }
+        }
+      ],
+      "status": 200
+    }
+  }
+}

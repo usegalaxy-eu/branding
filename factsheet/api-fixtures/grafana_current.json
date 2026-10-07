@@ -1,0 +1,226 @@
+{
+  "results": {
+    "egi_checkin_users": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1782764520000
+              ],
+              [
+                523
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "labels": {
+                  "provider": "egi-checkin"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "name": "users-with-oidc.last { provider: egi-checkin }",
+            "refId": "egi_checkin_users"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "elixir_users": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1782764520000,
+                1782764580000,
+                1782764640000,
+                1782764700000,
+                1782764760000,
+                1782764820000,
+                1782764880000,
+                1782764940000,
+                1782765000000,
+                1782765060000
+              ],
+              [
+                336,
+                336,
+                336,
+                336,
+                336,
+                336,
+                336,
+                336,
+                336,
+                336
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "users-with-oidc.last { provider: elixir }"
+                },
+                "labels": {
+                  "provider": "elixir"
+                },
+                "name": "Value",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT last(\"count\") FROM \"users-with-oidc\" WHERE \"provider\"::tag = 'elixir' AND time >= 1782743492714ms and time <= 1782765092714ms GROUP BY time(60000ms), \"provider\" fill(0) ORDER BY time ASC",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "users-with-oidc.last { provider: elixir }",
+            "refId": "elixir_users"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "monthly_users": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                1782691363000
+              ],
+              [
+                "2026-05"
+              ],
+              [
+                8553
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Time",
+                "type": "time",
+                "typeInfo": {
+                  "frame": "time.Time"
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "month"
+                },
+                "name": "month",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              },
+              {
+                "config": {
+                  "displayNameFromDS": "Active users"
+                },
+                "name": "Active users",
+                "type": "number",
+                "typeInfo": {
+                  "frame": "float64",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SELECT last(\"active_users\") as \"Active users\" FROM \"galaxy_monthly_active_users\" GROUP BY \"month\"::tag",
+              "preferredVisualisationType": "table",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "galaxy_monthly_active_users",
+            "refId": "monthly_users"
+          }
+        }
+      ],
+      "status": 200
+    },
+    "tools": {
+      "frames": [
+        {
+          "data": {
+            "values": [
+              [
+                "xpath",
+                "xtandem_adapter",
+                "xtb_molecular_optimization",
+                "yahs",
+                "yeastmine",
+                "yolo_predict",
+                "yolo_training",
+                "zebrafishmine",
+                "zerone",
+                "zoo_project_ogc_api_processes"
+              ]
+            ]
+          },
+          "schema": {
+            "fields": [
+              {
+                "name": "Value",
+                "type": "string",
+                "typeInfo": {
+                  "frame": "string",
+                  "nullable": true
+                }
+              }
+            ],
+            "meta": {
+              "custom": null,
+              "executedQueryString": "SHOW TAG VALUES FROM \"tool-usage\" WITH KEY = \"tool_id\"",
+              "preferredVisualisationType": "graph",
+              "typeVersion": [
+                0,
+                0
+              ]
+            },
+            "name": "tool-usage",
+            "refId": "tools"
+          }
+        }
+      ],
+      "status": 200
+    }
+  }
+}
